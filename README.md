@@ -7,3 +7,5 @@ Tähän repositorioon toteutan *Ohjelmistotekniikan menetelmät* -kurssin **harj
 * [komentorivi.txt](https://github.com/otsha/otm-harjoitustyo/blob/master/laskarit/komentorivi.txt)
 
 * [gitlog.txt](https://github.com/otsha/otm-harjoitustyo/blob/master/laskarit/gitlog.txt)
+
+Let's unsynchronize!
