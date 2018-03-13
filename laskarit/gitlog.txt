@@ -1,0 +1,98 @@
+commit fa274e7370a7d36dc19c0479ae1c06503017d0e2
+Author: otsha <otsohaa@gmail.com>
+Date:   Tue Mar 13 12:26:24 2018 +0200
+
+    harjoittelua
+
+ tiedostoja/file1.txt  | 0
+ tiedostoja/file2.txt  | 0
+ tiedostoja/file22.txt | 0
+ 3 files changed, 0 insertions(+), 0 deletions(-)
+
+commit 16ddc810e6587e818c47851d0853a732ce88a3a9
+Author: otsha <otsohaa@gmail.com>
+Date:   Tue Mar 13 12:23:10 2018 +0200
+
+    lisää tiedostoja
+
+ tiedostoja/file1.txt | 0
+ tiedostoja/file2.txt | 0
+ tiedostoja/file3.txt | 0
+ 3 files changed, 0 insertions(+), 0 deletions(-)
+
+commit 6a14c4f1f3f2e884a859769ad28df6677cb950f9
+Author: otsha <otsohaa@gmail.com>
+Date:   Tue Mar 13 12:00:39 2018 +0200
+
+    muokkauksia
+
+ eka.txt    | 3 ++-
+ kolmas.txt | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+commit 6d703e9657b59971b71fc3dfca933e19bf4d3e6e
+Author: otsha <otsohaa@gmail.com>
+Date:   Tue Mar 13 11:59:07 2018 +0200
+
+    rename eka
+
+ eka.txt      | 1 +
+ tiedosto.txt | 1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+
+commit 99f8dcc55106bbf61c43fd32677cc432cef28018
+Author: otsha <otsohaa@gmail.com>
+Date:   Tue Mar 13 11:58:16 2018 +0200
+
+    poista toka
+
+ toinen.txt | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit 0f93e329e4e85ce05a3b6f94fd59077a9edcbfc1
+Author: otsha <otsohaa@gmail.com>
+Date:   Tue Mar 13 11:53:30 2018 +0200
+
+    add stuff
+
+ stuff/neljas.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit c7665a311924126e2fc1dc4dcc37d780c63538b2
+Author: otsha <otsohaa@gmail.com>
+Date:   Tue Mar 13 11:52:48 2018 +0200
+
+    muutoksia 2 ja 3
+
+ kolmas.txt | 1 +
+ toinen.txt | 1 +
+ 2 files changed, 2 insertions(+)
+
+commit 53a6b92e0651cc741f4f079392801bc40304842e
+Author: otsha <otsohaa@gmail.com>
+Date:   Tue Mar 13 11:52:06 2018 +0200
+
+    kolmannen luonti
+
+ kolmas.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit f5ff9508567c44cb9988112da2e1e1c9100522f4
+Author: otsha <otsohaa@gmail.com>
+Date:   Tue Mar 13 11:51:02 2018 +0200
+
+    muutos ja lisäys
+
+ tiedosto.txt | 1 +
+ toinen.txt   | 0
+ 2 files changed, 1 insertion(+)
+
+commit 2596e96a5e42028497dd34337a5b421387408410
+Author: otsha <otsohaa@gmail.com>
+Date:   Tue Mar 13 11:49:45 2018 +0200
+
+    tiedosto.txt luotu
+
+ tiedosto.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
