@@ -1,5 +1,5 @@
-# Project log
+# Projektin työaikaseuranta
 
-| Date | Time used | Description
+| pvm | Käytetty aika | Kuvaus
 |------|-----------|------------
-| 22.3.| 3         | Week 2 exercises, jUnit testing
+| 22.3.| 5         | Viikon 2 tehtävät, aiheen valinta ja määrittelydokumentti
