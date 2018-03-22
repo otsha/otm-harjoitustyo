@@ -1,6 +1,11 @@
-# Harjoitustyö
+# Budjetointisovellus
 
-Tähän repositorioon toteutan *Ohjelmistotekniikan menetelmät* -kurssin **harjoitustyöni**.
+Harjoitustyö kevään 2018 kurssille *Ohjelmistotekniikan menetelmät (OTM)*.
+
+## Dokumentaatio
+* [Määrittelydokumentti](https://github.com/otsha/otm-harjoitustyo/blob/master/documentation/description.md)
+
+* [Työaikaseuranta](https://github.com/otsha/otm-harjoitustyo/blob/master/documentation/log.md)
 
 ## Tehtävät
 ### Viikko 1
