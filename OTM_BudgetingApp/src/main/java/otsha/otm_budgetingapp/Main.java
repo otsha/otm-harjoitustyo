@@ -2,22 +2,17 @@ package otsha.otm_budgetingapp;
 
 import javafx.application.Application;
 import static javafx.application.Application.launch;
-import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import ui.SceneController;
 
-
-public class MainApp extends Application {
+public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        BorderPane view = new BorderPane();
+        SceneController sc = new SceneController(stage);
         
-        Scene scene = new Scene(view);
-        scene.getStylesheets().add("/styles/Styles.css");
-        
+        sc.initialScene();
         stage.setTitle("BudgetingApp");
-        stage.setScene(scene);
         stage.show();
     }
 
