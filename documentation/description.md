@@ -17,3 +17,6 @@ Sovelluksella käyttäjä voi luoda ja tallentaa budjettisuunnitelmia, tarkastel
 ## Jatkokehitysideoita
 - Mahdollisuus merkitä, kuinka paljon varoja budjetoituun käyttökohteeseen todellisuudessa käytettiin
 - Osuuksien tarkastelu kaavioina
+
+## Alustava tietokantakaavio
+![yUML-kaavio](https://yuml.me/d26ec6ce.png)
