@@ -27,6 +27,10 @@ public class PlanDao {
             list.add(new Plan(rs.getInt("id"), rs.getString("name"), rs.getDouble("budget")));
         }
         
+        rs.close();
+        stmt.close();
+        conn.close();
+        
         return list;
     }
     
@@ -38,8 +42,36 @@ public class PlanDao {
         ResultSet rs = stmt.executeQuery();
         
         if (rs.next()) {
-            return new Plan(rs.getInt("id"), rs.getString("name"), rs.getDouble("budget"));
+            Plan p = new Plan(rs.getInt("id"), rs.getString("name"), rs.getDouble("budget"));
+            rs.close();
+            stmt.close();
+            conn.close();
+            return p;
         } else {
+            rs.close();
+            stmt.close();
+            conn.close();
+            return null;
+        }
+    }
+    
+    public Plan findOneByName(String name) throws SQLException {
+        Connection conn = db.getConnection();
+        
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Plan WHERE name=?;");
+        stmt.setString(1, name);
+        ResultSet rs = stmt.executeQuery();
+        
+        if (rs.next()) {
+            Plan p = new Plan(rs.getInt("id"), rs.getString("name"), rs.getDouble("budget"));
+            rs.close();
+            stmt.close();
+            conn.close();
+            return p;
+        } else {
+            rs.close();
+            stmt.close();
+            conn.close();
             return null;
         }
     }
@@ -80,12 +112,13 @@ public class PlanDao {
         conn.close();
     }
     
-    public void delete(int key) throws SQLException {
+    public void delete(Integer key) throws SQLException {
         Connection conn = db.getConnection();
         
-        PreparedStatement stmt = conn.prepareStatement("DELETE FROM Plan WHERE id=?;");
+        PreparedStatement stmt = conn.prepareStatement("DELETE FROM Plan WHERE id = ?");
         stmt.setInt(1, key);
         stmt.executeUpdate();
+        
         stmt.close();
         conn.close();
     }
