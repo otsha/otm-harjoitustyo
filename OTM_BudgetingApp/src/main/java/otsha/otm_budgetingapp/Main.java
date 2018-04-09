@@ -1,5 +1,6 @@
 package otsha.otm_budgetingapp;
 
+import dao.PlanDao;
 import data.Database;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
@@ -13,6 +14,9 @@ public class Main extends Application {
         SceneController sc = new SceneController(stage);
         
         Database db = new Database("jdbc:sqlite:database.db");
+        
+        PlanDao pDao = new PlanDao(db);
+        pDao.findAll().forEach(p -> System.out.println(p.getName() + ", " + p.getAmount()));
         
         sc.initialScene();
         stage.setTitle("BudgetingApp");
