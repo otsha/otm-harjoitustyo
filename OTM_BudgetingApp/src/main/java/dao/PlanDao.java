@@ -90,7 +90,7 @@ public class PlanDao {
             
             PreparedStatement updatePlan = conn.prepareStatement("UPDATE Plan SET name=?, budget=?, WHERE id=?;");
             updatePlan.setString(1, p.getName());
-            updatePlan.setDouble(2, p.getAmount());
+            updatePlan.setDouble(2, p.getBudget());
             updatePlan.setInt(3, p.getId());
             
             updatePlan.executeUpdate();
@@ -102,7 +102,7 @@ public class PlanDao {
             
             PreparedStatement savePlan = conn.prepareStatement("INSERT INTO Plan (name, budget) VALUES (?, ?);");
             savePlan.setString(1, p.getName());
-            savePlan.setDouble(2, p.getAmount());
+            savePlan.setDouble(2, p.getBudget());
             
             savePlan.executeUpdate();
             

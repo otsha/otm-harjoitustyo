@@ -204,7 +204,7 @@ public class SceneController {
         view.setTop(backToMainMenu);
 
         // Add content to second scene
-        Label l = new Label(p.getName() + ", Budjetti: " + p.getAmount());
+        Label l = new Label(p.getName() + ", Budjetti: " + p.getBudget());
         view.setCenter(l);
 
         stage.setScene(scene);

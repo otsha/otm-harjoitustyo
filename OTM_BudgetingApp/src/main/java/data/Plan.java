@@ -28,7 +28,7 @@ public class Plan {
         return name;
     }
     
-    public double getAmount() {
+    public double getBudget() {
         return budget;
     }
     

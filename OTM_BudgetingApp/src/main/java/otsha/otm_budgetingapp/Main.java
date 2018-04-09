@@ -14,9 +14,6 @@ public class Main extends Application {
         Database db = new Database("jdbc:sqlite:database.db");
         SceneController sc = new SceneController(stage, db);
         
-        PlanDao pDao = new PlanDao(db);
-        pDao.findAll().forEach(p -> System.out.println(p.getName() + ", " + p.getAmount()));
-        
         sc.initialScene();
         stage.setTitle("BudgetingApp");
         stage.show();
