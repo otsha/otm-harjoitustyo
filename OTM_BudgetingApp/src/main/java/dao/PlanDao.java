@@ -29,4 +29,64 @@ public class PlanDao {
         
         return list;
     }
+    
+    public Plan findOne(int key) throws SQLException {
+        Connection conn = db.getConnection();
+        
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Plan WHERE id=?;");
+        stmt.setInt(1, key);
+        ResultSet rs = stmt.executeQuery();
+        
+        if (rs.next()) {
+            return new Plan(rs.getInt("id"), rs.getString("name"), rs.getDouble("budget"));
+        } else {
+            return null;
+        }
+    }
+    
+    public void saveOrUpdate(Plan p) throws SQLException {
+        Connection conn = db.getConnection();
+        
+        // Check if Plan is already in the database
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Plan WHERE id=?;");
+        stmt.setInt(1, p.getId());
+        ResultSet rs = stmt.executeQuery();
+        
+        if (rs.next()) {
+            rs.close();
+            stmt.close();
+            
+            PreparedStatement updatePlan = conn.prepareStatement("UPDATE Plan SET name=?, budget=?, WHERE id=?;");
+            updatePlan.setString(1, p.getName());
+            updatePlan.setDouble(2, p.getAmount());
+            updatePlan.setInt(3, p.getId());
+            
+            updatePlan.executeUpdate();
+            
+            updatePlan.close();
+        } else {
+            rs.close();
+            stmt.close();
+            
+            PreparedStatement savePlan = conn.prepareStatement("INSERT INTO Plan (name, budget) VALUES (?, ?);");
+            savePlan.setString(1, p.getName());
+            savePlan.setDouble(2, p.getAmount());
+            
+            savePlan.executeUpdate();
+            
+            savePlan.close();
+        }
+        
+        conn.close();
+    }
+    
+    public void delete(int key) throws SQLException {
+        Connection conn = db.getConnection();
+        
+        PreparedStatement stmt = conn.prepareStatement("DELETE FROM Plan WHERE id=?;");
+        stmt.setInt(1, key);
+        stmt.executeUpdate();
+        stmt.close();
+        conn.close();
+    }
 }

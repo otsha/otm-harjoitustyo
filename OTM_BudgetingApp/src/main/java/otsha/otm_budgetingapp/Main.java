@@ -11,9 +11,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        SceneController sc = new SceneController(stage);
-        
         Database db = new Database("jdbc:sqlite:database.db");
+        SceneController sc = new SceneController(stage, db);
         
         PlanDao pDao = new PlanDao(db);
         pDao.findAll().forEach(p -> System.out.println(p.getName() + ", " + p.getAmount()));

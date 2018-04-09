@@ -1,5 +1,11 @@
 package ui;
 
+import dao.PlanDao;
+import data.Database;
+import data.Plan;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -14,11 +20,13 @@ public class SceneController {
     private double width;
     private double height;
     private Stage stage;
+    private Database db;
     
-    public SceneController(Stage s) {
+    public SceneController(Stage s, Database db) {
         this.width = 640;
         this.height = 480;
         this.stage = s;
+        this.db = db;
     }
     
     public void initialScene() {
@@ -39,6 +47,16 @@ public class SceneController {
         Button createNewPlan = new Button("Create");
 
         createNewPlan.setOnAction((event) -> {
+            System.out.println("Received: " + planName.getText() + ", " + budgetAmount.getText());
+            Plan p = new Plan(0, planName.getText(), Double.parseDouble(budgetAmount.getText()));
+            PlanDao pDao = new PlanDao(db);
+            
+            try {
+                pDao.saveOrUpdate(p);
+            } catch (SQLException ex) {
+
+            }
+            
             editPlan();
         });
         
