@@ -31,7 +31,8 @@ public class SceneController {
         this.stage = s;
         this.db = db;
     }
-
+    
+    // THIS IS SHOWN WHEN THE APP FIRST STARTS
     public void initialScene() {
 
         // Setup the initial scene
@@ -68,7 +69,8 @@ public class SceneController {
         // initialScene.getStylesheets().add("/styles/Styles.css");
         stage.setScene(initialScene);
     }
-
+    
+    // CREATE A NEW BUDGET PLAN
     public void createPlan() {
         PlanDao pDao = new PlanDao(db);
 
@@ -118,7 +120,8 @@ public class SceneController {
 
         stage.setScene(scene);
     }
-
+    
+    // OPENING AND/OR DELETING AN EXISTING BUDGET PLAN
     public void openPlan() throws SQLException {
         PlanDao pDao = new PlanDao(db);
 
@@ -187,7 +190,8 @@ public class SceneController {
 
         stage.setScene(scene);
     }
-
+    
+    // VIEW THE DETAILS OF A PLAN
     public void editPlan(Plan p) {
         // Setup the scene
         BorderPane view = new BorderPane();
