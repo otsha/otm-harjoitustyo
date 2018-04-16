@@ -83,31 +83,38 @@ public class PlanDao {
         ResultSet rs = stmt.executeQuery();
 
         if (rs.next()) {
-            rs.close();
-            stmt.close();
-
-            PreparedStatement updatePlan = conn.prepareStatement("UPDATE Plan SET name=?, budget=? WHERE id=?;");
-            updatePlan.setString(1, p.getName());
-            updatePlan.setDouble(2, p.getBudget());
-            updatePlan.setInt(3, p.getId());
-
-            updatePlan.executeUpdate();
-
-            updatePlan.close();
+            disconnect(conn, stmt, rs);
+            updatePlan(p);
         } else {
-            rs.close();
-            stmt.close();
-
-            PreparedStatement savePlan = conn.prepareStatement("INSERT INTO Plan (name, budget) VALUES (?, ?);");
-            savePlan.setString(1, p.getName());
-            savePlan.setDouble(2, p.getBudget());
-
-            savePlan.executeUpdate();
-
-            savePlan.close();
+            disconnect(conn, stmt, rs);
+            savePlan(p);
         }
+    }
 
+    private void savePlan(Plan p) throws SQLException {
+        Connection conn = db.getConnection();
+
+        PreparedStatement savePlan = conn.prepareStatement("INSERT INTO Plan (name, budget) VALUES (?, ?);");
+        savePlan.setString(1, p.getName());
+        savePlan.setDouble(2, p.getBudget());
+
+        savePlan.executeUpdate();
+
+        savePlan.close();
         conn.close();
+    }
+
+    private void updatePlan(Plan p) throws SQLException {
+        Connection conn = db.getConnection();
+
+        PreparedStatement updatePlan = conn.prepareStatement("UPDATE Plan SET name=?, budget=? WHERE id=?;");
+        updatePlan.setString(1, p.getName());
+        updatePlan.setDouble(2, p.getBudget());
+        updatePlan.setInt(3, p.getId());
+
+        updatePlan.executeUpdate();
+
+        updatePlan.close();
     }
 
     public void delete(Integer key) throws SQLException {

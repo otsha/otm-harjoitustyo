@@ -1,4 +1,4 @@
-package otsha.otm_budgetingapp;
+package budgetingapp;
 
 import data.Database;
 import javafx.application.Application;
