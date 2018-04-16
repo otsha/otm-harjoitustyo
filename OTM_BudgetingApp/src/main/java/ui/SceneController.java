@@ -1,12 +1,7 @@
 package ui;
 
-import dao.PlanDao;
 import data.Database;
 import data.Plan;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -17,21 +12,22 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import logic.PlanHandler;
 
 public class SceneController {
 
     private double width;
     private double height;
     private Stage stage;
-    private Database db;
     private Insets insets;
+    private PlanHandler planHandler;
 
-    public SceneController(Stage s, Database db) {
+    public SceneController(Stage s, PlanHandler ph) {
         this.width = 640;
         this.height = 480;
         this.stage = s;
-        this.db = db;
         this.insets = new Insets(20, 20, 20, 20);
+        this.planHandler = ph;
     }
 
     // Setup an empty default view
@@ -46,9 +42,7 @@ public class SceneController {
 
     // THIS IS SHOWN WHEN THE APP FIRST STARTS
     // Managing (Creating, opening and deleting) budget plans
-    public void initialScene() throws SQLException {
-        PlanDao pDao = new PlanDao(db);
-
+    public void initialScene() {
         BorderPane view = setup();
         Scene scene = new Scene(view);
 
@@ -57,12 +51,7 @@ public class SceneController {
 
         // List all the existing plans in the database
         ListView<String> planListView = new ListView<>();
-        ObservableList<String> items = FXCollections.observableArrayList();
-        ArrayList<Plan> planList = pDao.findAll();
-        if (!planList.isEmpty()) {
-            planList.stream().map(p -> p.getName()).forEach(n -> items.add(n));
-        }
-        planListView.setItems(items);
+        planListView.setItems(planHandler.getAllPlans());
         planListView.setPrefHeight(height / 2);
 
         // Add buttons for opening or deleting the selected plan
@@ -71,31 +60,21 @@ public class SceneController {
         // Opening the selected plan
         Button openPlan = new Button("Open...");
         openPlan.setOnAction((event) -> {
-            try {
-                if (!items.isEmpty()) {
-                    Plan p = pDao.findOneByName(planListView.getSelectionModel().selectedItemProperty().getValue());
-                    editPlan(p);
-                }
-            } catch (SQLException ex) {
-                System.out.println("error");
+            Plan p = planHandler.openPlan(planListView);
+            if (p != null) {
+                editPlan(p);
             }
         });
 
         // Deleting the selected plan
         Button deletePlan = new Button("Delete");
+
         deletePlan.setOnAction((event) -> {
-            try {
-                if (!items.isEmpty()) {
-                    Plan p = pDao.findOneByName(planListView.getSelectionModel().selectedItemProperty().getValue());
-                    pDao.delete(p.getId());
-
-                    // Refresh the scene after deleting an item to show the updated listing
-                    initialScene();
-                }
-            } catch (SQLException ex) {
-                System.out.println("error");
+            if (planHandler.deletePlan(planListView) == true) {
+                initialScene();
+            } else {
+                // <To-do: Display an error message here>
             }
-
         });
 
         // Creating a new plan
@@ -105,7 +84,6 @@ public class SceneController {
         });
 
         openOrDelete.getChildren().addAll(createPlan, openPlan, deletePlan);
-
         openingMenu.getChildren().addAll(planListView, openOrDelete);
 
         view.setCenter(openingMenu);
@@ -115,7 +93,6 @@ public class SceneController {
 
     // CREATE A NEW BUDGET PLAN
     public void createPlan() {
-        PlanDao pDao = new PlanDao(db);
 
         BorderPane view = setup();
         Scene scene = new Scene(view);
@@ -123,11 +100,7 @@ public class SceneController {
         // Add a back button
         Button backToMainMenu = new Button("<");
         backToMainMenu.setOnAction((event) -> {
-            try {
-                initialScene();
-            } catch (SQLException ex) {
-                System.out.println("error");
-            }
+            initialScene();
         });
         view.setTop(backToMainMenu);
 
@@ -143,18 +116,11 @@ public class SceneController {
 
         // Handle creating a new plan
         createNewPlan.setOnAction((event) -> {
-            if (planName.getText().equals("") || budgetAmount.getText().equals("")) {
-                inputErrorLabel.setText("The name and/or the budget amount cannot be empty.");
-            } else {
-                Plan p = new Plan(0, planName.getText(), Double.parseDouble(budgetAmount.getText()));
-
-                try {
-                    pDao.saveOrUpdate(p);
-                } catch (SQLException ex) {
-
-                }
-
+            Plan p = planHandler.createPlan(planName.getText(), budgetAmount.getText());
+            if (p != null) {
                 editPlan(p);
+            } else {
+                inputErrorLabel.setText("Plan could not be created. Either one of the fields is invalid or an error occurred.");
             }
         });
 
@@ -173,11 +139,7 @@ public class SceneController {
         // Add a back button
         Button backToMainMenu = new Button("<");
         backToMainMenu.setOnAction((event) -> {
-            try {
-                initialScene();
-            } catch (SQLException ex) {
-                System.out.println("error");
-            }
+            initialScene();
         });
         view.setTop(backToMainMenu);
 
