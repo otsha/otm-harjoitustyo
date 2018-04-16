@@ -49,7 +49,7 @@ public class PlanHandler {
             } catch (SQLException ex) {
                 return null;
             }
-        }        
+        }
     }
 
     public Plan openPlan(ListView<String> list) {
