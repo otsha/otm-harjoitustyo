@@ -2,10 +2,10 @@ package data;
 
 public class Category {
     
-    public int id;
-    public String name;
-    public double allocated;
-    public Plan plan;
+    private int id;
+    private String name;
+    private double allocated;
+    private final Plan plan;
     
     public Category(int id, String name, double allocated, Plan plan) {
         this.id = id;
@@ -41,9 +41,4 @@ public class Category {
     public Plan getPlan() {
         return plan;
     }
-
-    public void setPlan(Plan plan) {
-        this.plan = plan;
-    }
-    
 }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dao;
 
 import data.Database;
@@ -20,10 +15,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- *
- * @author haaotso
- */
 public class PlanDaoTest {
 
     private Database db;
@@ -72,20 +63,20 @@ public class PlanDaoTest {
             assertEquals(11, p.getBudget(), 0);
         }
     }
-    
+
     @Test
     public void planIsUpdatedProperly() throws SQLException {
         Plan p = new Plan(1, "test", 10);
-        
+
         pDao.saveOrUpdate(p);
-        
+
         p.setName("hello");
         p.setBudget(20);
-        
+
         pDao.saveOrUpdate(p);
-        
+
         Plan q = pDao.findOne(1);
-        
+
         assertEquals(1, q.getId());
         assertEquals("hello", q.getName());
         assertEquals((double) 20, q.getBudget(), 0);
@@ -133,29 +124,29 @@ public class PlanDaoTest {
         assertEquals("qtest", list.get(1).getName());
         assertEquals((double) 20, list.get(1).getBudget(), 0);
     }
-    
+
     @Test
     public void planIsDeletedCorrectly() throws SQLException {
         Plan p = new Plan(1, "test", 10);
-        
+
         pDao.saveOrUpdate(p);
-        
+
         pDao.delete(p.getId());
-        
+
         assertEquals(null, pDao.findOne(1));
     }
-    
+
     @Test
     public void findOneReturnsNullIfPlanDoesNotExist() throws SQLException {
         Plan q = pDao.findOne(1);
-        
+
         assertEquals(null, q);
     }
-    
+
     @Test
     public void findOneByNameReturnsNullIfPlanDoesNotExist() throws SQLException {
         Plan q = pDao.findOneByName("test");
-        
+
         assertEquals(null, q);
     }
 }
