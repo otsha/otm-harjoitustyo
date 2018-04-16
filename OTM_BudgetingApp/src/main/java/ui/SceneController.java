@@ -5,8 +5,6 @@ import data.Database;
 import data.Plan;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -35,17 +33,17 @@ public class SceneController {
         this.db = db;
         this.insets = new Insets(20, 20, 20, 20);
     }
-    
+
     // Setup an empty default view
     public BorderPane setup() {
         BorderPane view = new BorderPane();
         view.setPrefWidth(width);
         view.setPrefHeight(height);
         view.setPadding(insets);
-        
+
         return view;
     }
-    
+
     // THIS IS SHOWN WHEN THE APP FIRST STARTS
     // Managing (Creating, opening and deleting) budget plans
     public void initialScene() throws SQLException {
@@ -87,21 +85,24 @@ public class SceneController {
         Button deletePlan = new Button("Delete");
         deletePlan.setOnAction((event) -> {
             try {
-                Plan p = pDao.findOneByName(planListView.getSelectionModel().selectedItemProperty().getValue());
-                pDao.delete(p.getId());
-                // Refresh the scene after deleting an item to show the updated listing
-                initialScene();
+                if (!items.isEmpty()) {
+                    Plan p = pDao.findOneByName(planListView.getSelectionModel().selectedItemProperty().getValue());
+                    pDao.delete(p.getId());
+
+                    // Refresh the scene after deleting an item to show the updated listing
+                    initialScene();
+                }
             } catch (SQLException ex) {
                 System.out.println("error");
             }
 
         });
-        
+
         // Creating a new plan
         Button createPlan = new Button("New...");
         createPlan.setOnAction((event) -> {
             createPlan();
-        }); 
+        });
 
         openOrDelete.getChildren().addAll(createPlan, openPlan, deletePlan);
 
@@ -111,7 +112,7 @@ public class SceneController {
 
         stage.setScene(scene);
     }
-    
+
     // CREATE A NEW BUDGET PLAN
     public void createPlan() {
         PlanDao pDao = new PlanDao(db);
@@ -162,7 +163,7 @@ public class SceneController {
 
         stage.setScene(scene);
     }
-    
+
     // VIEW THE DETAILS OF A PLAN
     public void editPlan(Plan p) {
 
