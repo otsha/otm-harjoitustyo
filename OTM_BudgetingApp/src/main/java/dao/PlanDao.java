@@ -47,7 +47,7 @@ public class PlanDao {
 
         if (rs.next()) {
             Plan p = new Plan(rs.getInt("id"), rs.getString("name"), rs.getDouble("budget"));
-            
+
             disconnect(conn, stmt, rs);
             return p;
         } else {
@@ -65,7 +65,7 @@ public class PlanDao {
 
         if (rs.next()) {
             Plan p = new Plan(rs.getInt("id"), rs.getString("name"), rs.getDouble("budget"));
-            
+
             disconnect(conn, stmt, rs);
             return p;
         } else {

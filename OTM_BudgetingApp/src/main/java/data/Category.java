@@ -1,12 +1,12 @@
 package data;
 
 public class Category {
-    
+
     private int id;
     private String name;
     private double allocated;
     private final Plan plan;
-    
+
     public Category(int id, String name, double allocated, Plan plan) {
         this.id = id;
         this.name = name;
