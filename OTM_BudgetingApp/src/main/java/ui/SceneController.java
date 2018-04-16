@@ -1,6 +1,5 @@
 package ui;
 
-import data.Database;
 import data.Plan;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
