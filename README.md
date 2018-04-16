@@ -7,4 +7,6 @@ Harjoitustyö kevään 2018 kurssille *Ohjelmistotekniikan menetelmät (OTM)*.
 
 * [Määrittelydokumentti](https://github.com/otsha/otm-harjoitustyo/blob/master/documentation/description.md)
 
+* [Arkkitehtuurikuvaus](https://github.com/otsha/otm-harjoitustyo/blob/master/documentation/architecture.md)
+
 * [Työaikaseuranta](https://github.com/otsha/otm-harjoitustyo/blob/master/documentation/log.md)
