@@ -86,7 +86,7 @@ public class PlanDao {
             rs.close();
             stmt.close();
 
-            PreparedStatement updatePlan = conn.prepareStatement("UPDATE Plan SET name=?, budget=?, WHERE id=?;");
+            PreparedStatement updatePlan = conn.prepareStatement("UPDATE Plan SET name=?, budget=? WHERE id=?;");
             updatePlan.setString(1, p.getName());
             updatePlan.setDouble(2, p.getBudget());
             updatePlan.setInt(3, p.getId());
