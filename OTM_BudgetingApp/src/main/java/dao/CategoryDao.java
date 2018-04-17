@@ -82,8 +82,31 @@ public class CategoryDao {
                     rs.getInt("id"),
                     rs.getString("name"),
                     rs.getDouble("allocated"),
-                    pDao.findOne(rs.getInt("plan_id"))
-            );
+                    pDao.findOne(rs.getInt("plan_id")));
+
+            disconnect(conn, stmt, rs);
+            return c;
+        } else {
+            disconnect(conn, stmt, rs);
+            return null;
+        }
+    }
+
+    public Category findOneByNameAndPlanId(String name, int planId) throws SQLException {
+        Connection conn = db.getConnection();
+
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Category WHERE name=? AND plan_id=?;");
+        stmt.setString(1, name);
+        stmt.setInt(2, planId);
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            PlanDao pDao = new PlanDao(db);
+            Category c = new Category(
+                    rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getDouble("allocated"),
+                    pDao.findOne(rs.getInt("plan_id")));
 
             disconnect(conn, stmt, rs);
             return c;

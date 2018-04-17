@@ -101,6 +101,21 @@ public class CategoryDaoTest {
     }
 
     @Test
+    public void categoryIsFetchedProperlyByNameAndPlanId() throws SQLException {
+        Plan p = new Plan(1, "testPlan", 10);
+        pDao.saveOrUpdate(p);
+
+        Category c = new Category(1, "testCategory", 5, p);
+        cDao.saveCategory(c);
+
+        Category g = cDao.findOneByNameAndPlanId("testCategory", 1);
+        assertEquals(1, g.getId());
+        assertEquals("testCategory", g.getName());
+        assertEquals((double) 5, g.getAllocated(), 0);
+        assertEquals(1, g.getPlan().getId());
+    }
+
+    @Test
     public void findAllFindsAllCategories() throws SQLException {
         Plan p = new Plan(1, "testPlan", 10);
         pDao.saveOrUpdate(p);
@@ -134,7 +149,7 @@ public class CategoryDaoTest {
 
         Category g = new Category(2, "testCategoryTwo", 5, p);
         cDao.saveCategory(g);
-        
+
         ArrayList<Category> list = cDao.findAllByPlanId(p.getId());
 
         assertEquals(1, list.get(0).getId());
@@ -173,13 +188,23 @@ public class CategoryDaoTest {
         cDao.saveCategory(g);
 
         cDao.deleteAllByPlanId(p.getId());
-        
+
         assertTrue(cDao.findAllByPlanId(1).isEmpty());
     }
 
     @Test
     public void findOneReturnsNullIfCategoryDoesNotExist() throws SQLException {
         Category c = cDao.findOne(1);
+
+        assertEquals(null, c);
+    }
+
+    @Test
+    public void findOneByNameAndPlanIdReturnsNullIfCategoryDoesNotExist() throws SQLException {
+        Plan p = new Plan(1, "testPlan", 10);
+        pDao.saveOrUpdate(p);
+
+        Category c = cDao.findOneByNameAndPlanId("hello", 1);
 
         assertEquals(null, c);
     }

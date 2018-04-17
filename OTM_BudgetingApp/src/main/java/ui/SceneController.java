@@ -142,9 +142,43 @@ public class SceneController {
         });
         view.setTop(backToMainMenu);
 
-        // Add content to second scene
-        Label l = new Label(p.getName() + ", Budjetti: " + p.getBudget());
-        view.setCenter(l);
+        // Add content to the scene
+        Label budget = new Label(p.getName() + ", Budjetti: " + p.getBudget());
+        Label categoryListLabel = new Label("Categories:");
+
+        ListView<String> categoryListView = new ListView<>();
+        categoryListView.setItems(planHandler.getAllCategories(p.getId()));
+        categoryListView.setPrefHeight(height / 2);
+
+        // Add a button for deleting categories
+        Button deleteCategoryButton = new Button("Delete");
+        deleteCategoryButton.setOnAction((event) -> {
+            if (planHandler.deleteCategory(categoryListView, p)) {
+                // Refresh the scene to update the category listing
+                editPlan(p);
+            }
+        });
+
+        // Add a form for creating categories
+        VBox createCategoryForm = new VBox();
+
+        Label categoryNameLabel = new Label("Category name:");
+        TextField categoryName = new TextField();
+
+        // Add a button for creating a category
+        Button createCategoryButton = new Button("Create");
+        createCategoryButton.setOnAction((event) -> {
+            if (planHandler.createCategory(categoryName.getText(), p)) {
+                // Refresh the scene to update the category listing
+                editPlan(p);
+            }
+        });
+
+        createCategoryForm.getChildren().addAll(categoryNameLabel, categoryName, createCategoryButton);
+
+        VBox categories = new VBox();
+        categories.getChildren().addAll(budget, categoryListLabel, categoryListView, deleteCategoryButton, createCategoryForm);
+        view.setLeft(categories);
 
         stage.setScene(scene);
     }
