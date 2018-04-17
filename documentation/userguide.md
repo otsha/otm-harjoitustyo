@@ -17,8 +17,25 @@ Tämänhetkisessä versiossa käyttäjä voi luoda, poistaa ja tarkastella budje
 - Valitse haluamasi suunnitelma ja paina "Open..." -painiketta listauksen alla
 - Nyt sovellus näyttää valitun suunnitelman tiedot
 
+### Budjettisuunnitelman muokkaaminen
+
+#### Kategorian tietojen näyttäminen
+- Valitse ruudun vasemmalta puolelta haluamasi kategoria
+- Nyt kategorian tiedot näytetään ruudun oikeassa reunassa.
+
+#### Kategorian lisääminen
+- Syötä kategorialistauksen alla olevaan lomakkeeseen nimi uudelle kategorialle ja haluamasi varaus kokonaisbudjetista
+- Valitse "Create"
+- Luotu kategoria näytetään nyt listauksessa
+
+#### Kategorian poistaminen
+- Valitse ruudun vasemman reunan listauksessa kategoria, jonka haluat poistaa
+- Valitse listauksen alta "Delete"
+- Valittu kategoria on nyt poistettu tietokannasta
+
 ## Budjettisuunnitelman poistaminen
 - Valitse sovelluksen ensimmäisestä näkymästä "Open an existing budget plan"
 - Jos tietokannassa ei ole budjettisuunnitelmia, seuraava näkymä on tyhjä.
 - Valitse suunnitelma, jonka haluat poistaa ja paina "Delete" -painiketta listauksen alla.
 - Nyt valitsemasi suunnitelma on poistettu tietokannasta.
+- Budjettisuunnitelman poistaminen poistaa myös siihen liittyvät kategoriat.
