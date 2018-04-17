@@ -142,10 +142,13 @@ public class SceneController {
         });
         view.setTop(backToMainMenu);
 
-        // Add content to the scene
-        Label budget = new Label(p.getName() + ", Budjetti: " + p.getBudget());
+        // Add labels for plan name, total budget, used & remaining
+        Label budget = new Label(p.getName() + ", Budget: " + p.getBudget());
+        Label used = new Label("Used: " + planHandler.getUsed(p));
+        Label remaining = new Label("Remaining: " + (p.getBudget() - planHandler.getUsed(p)));
         Label categoryListLabel = new Label("Categories:");
 
+        // Create and populate the category listing
         ListView<String> categoryListView = new ListView<>();
         categoryListView.setItems(planHandler.getAllCategories(p.getId()));
         categoryListView.setPrefHeight(height / 2);
@@ -164,21 +167,54 @@ public class SceneController {
 
         Label categoryNameLabel = new Label("Category name:");
         TextField categoryName = new TextField();
+        Label categoryAllocationLabel = new Label("Category allocation:");
+        TextField categoryAllocation = new TextField();
 
         // Add a button for creating a category
         Button createCategoryButton = new Button("Create");
         createCategoryButton.setOnAction((event) -> {
-            if (planHandler.createCategory(categoryName.getText(), p)) {
+            if (planHandler.createCategory(categoryName.getText(), categoryAllocation.getText(), p)) {
                 // Refresh the scene to update the category listing
                 editPlan(p);
             }
         });
 
-        createCategoryForm.getChildren().addAll(categoryNameLabel, categoryName, createCategoryButton);
+        createCategoryForm.getChildren().addAll(
+                categoryNameLabel,
+                categoryName,
+                categoryAllocationLabel,
+                categoryAllocation,
+                createCategoryButton
+        );
 
         VBox categories = new VBox();
-        categories.getChildren().addAll(budget, categoryListLabel, categoryListView, deleteCategoryButton, createCategoryForm);
+        categories.getChildren().addAll(
+                budget,
+                used,
+                remaining,
+                categoryListLabel,
+                categoryListView,
+                deleteCategoryButton,
+                createCategoryForm
+        );
         view.setLeft(categories);
+
+        // Viewing the details of a selected category
+        VBox selectedCategory = new VBox();
+
+        Label selectedCategoryNameLabel = new Label();
+        Label selectedCategoryAllocationLabel = new Label();
+
+        selectedCategory.getChildren().addAll(
+                selectedCategoryNameLabel,
+                selectedCategoryAllocationLabel
+        );
+        view.setRight(selectedCategory);
+
+        categoryListView.getSelectionModel().selectedItemProperty().addListener((event) -> {
+            selectedCategoryNameLabel.setText(planHandler.editCategory(categoryListView, p).getName());
+            selectedCategoryAllocationLabel.setText("Allocation: " + planHandler.editCategory(categoryListView, p).getAllocated());
+        });
 
         stage.setScene(scene);
     }
