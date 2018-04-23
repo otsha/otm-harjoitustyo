@@ -7,5 +7,7 @@
 | 14.4 | ~0,5      | Käyttöliittymän nopea refaktorointi, siistiminen ja tiivistäminen
 | 16.4 | ~5        | Back-end työtä: Uusi Dao-luokka, testikattavuuden laajentaminen, checkstylen käyttöönotto ja tyylivirheiden korjaus, olemassaolevan logiikan eriyttäminen käyttöliittymästä, ensimmäinen arkkitehtuurikaavio
 | 17.4 | 1,5       | Uusia ominaisuuksia: Kategorioiden lisääminen ja poistaminen budjettisuunnitelman sisällä, kunkin kategorian tietojen näyttäminen, kaksi uutta testiä
+| 23.4 | 6         | **Back-end:** Kulujen (Expense) käsittely mm. uusi Dao-luokka ja jUnit-testit, tietokanta alustetaan nyt valmiiksi jos sitä ei ole olemassa. 
+|      |           |**Front-end:** Yksittäisten menojen lisääminen ja poistaminen budjettisuunnitelman kategorioissa (tässä etenkin käyttöliittymätoteutus vei paljon aikaa), lisäinformaation näyttäminen budjettisuunnitelmaan liittyen
 
-Yhteensä: ~16h
+Yhteensä: ~22h
