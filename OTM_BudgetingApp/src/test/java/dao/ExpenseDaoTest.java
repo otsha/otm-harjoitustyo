@@ -33,37 +33,10 @@ public class ExpenseDaoTest {
         this.db = new Database("jdbc:sqlite:test.db");
         this.conn = db.getConnection();
 
-        PreparedStatement createPlanTable = conn.prepareStatement("CREATE TABLE Plan ("
-                + "id integer PRIMARY KEY, "
-                + "name varchar(255), "
-                + "budget float);"
-        );
-        createPlanTable.execute();
-        createPlanTable.close();
-
-        PreparedStatement createCategoryTable = conn.prepareStatement("CREATE TABLE Category ("
-                + "id integer PRIMARY KEY, "
-                + "plan_id integer, "
-                + "name varchar(255), "
-                + "allocated float, "
-                + "FOREIGN KEY (plan_id) REFERENCES Plan(id));"
-        );
-        createCategoryTable.execute();
-        createCategoryTable.close();
-
-        PreparedStatement createExpenseTable = conn.prepareStatement("CREATE TABLE Expense ("
-                + "id integer PRIMARY KEY, "
-                + "category_id integer, "
-                + "name varchar(255), "
-                + "amount float, "
-                + "FOREIGN KEY (category_id) REFERENCES Category(id));"
-        );
-        createExpenseTable.execute();
-        createExpenseTable.close();
-
         this.eDao = new ExpenseDao(db);
         this.cDao = new CategoryDao(db);
         this.pDao = new PlanDao(db);
+
     }
 
     @After
@@ -114,9 +87,9 @@ public class ExpenseDaoTest {
 
         Expense e = new Expense(1, "testExpense", 2.2, c);
         eDao.save(e);
-        
+
         Expense x = eDao.findOne(1);
-        
+
         assertEquals(1, x.getId());
         assertEquals("testExpense", x.getName());
         assertEquals(2.2, x.getAmount(), 0);

@@ -28,9 +28,6 @@ public class PlanDaoTest {
         this.db = new Database("jdbc:sqlite:test.db");
         this.conn = db.getConnection();
 
-        PreparedStatement createPlanTable = conn.prepareStatement("CREATE TABLE Plan (id integer PRIMARY KEY, name varchar(255), budget float);");
-        createPlanTable.execute();
-
         this.pDao = new PlanDao(db);
     }
 

@@ -29,26 +29,12 @@ public class CategoryDaoTest {
 
         // Database and connection setup
         this.db = new Database("jdbc:sqlite:test.db");
+        
         this.conn = db.getConnection();
-
-        PreparedStatement createCategoryTable = conn.prepareStatement("CREATE TABLE Category ("
-                + "id integer PRIMARY KEY, "
-                + "plan_id integer, "
-                + "name varchar(255), "
-                + "allocated float, "
-                + "FOREIGN KEY (plan_id) REFERENCES Plan(id));"
-        );
-        createCategoryTable.execute();
-
-        PreparedStatement createPlanTable = conn.prepareStatement("CREATE TABLE Plan ("
-                + "id integer PRIMARY KEY, "
-                + "name varchar(255), "
-                + "budget float);"
-        );
-        createPlanTable.execute();
 
         this.cDao = new CategoryDao(db);
         this.pDao = new PlanDao(db);
+        
     }
 
     @After
