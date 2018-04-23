@@ -74,47 +74,27 @@ public class PlanDao {
         }
     }
 
-    public void saveOrUpdate(Plan p) throws SQLException {
+    public boolean save(Plan p) throws SQLException {
         Connection conn = db.getConnection();
+        PreparedStatement doesThisExist = conn.prepareStatement("SELECT * FROM Plan WHERE name = ?;");
+        doesThisExist.setString(1, p.getName());
+        ResultSet rs = doesThisExist.executeQuery();
 
-        // Check if Plan is already in the database
-        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Plan WHERE id=?;");
-        stmt.setInt(1, p.getId());
-        ResultSet rs = stmt.executeQuery();
+        if (!rs.next()) {
+            PreparedStatement savePlan = conn.prepareStatement("INSERT INTO Plan (name, budget) VALUES (?, ?);");
+            savePlan.setString(1, p.getName());
+            savePlan.setDouble(2, p.getBudget());
 
-        if (rs.next()) {
-            disconnect(conn, stmt, rs);
-            updatePlan(p);
+            savePlan.executeUpdate();
+
+            savePlan.close();
+            conn.close();
+            
+            return true;
         } else {
-            disconnect(conn, stmt, rs);
-            savePlan(p);
+            disconnect(conn, doesThisExist, rs);
+            return false;
         }
-    }
-
-    private void savePlan(Plan p) throws SQLException {
-        Connection conn = db.getConnection();
-
-        PreparedStatement savePlan = conn.prepareStatement("INSERT INTO Plan (name, budget) VALUES (?, ?);");
-        savePlan.setString(1, p.getName());
-        savePlan.setDouble(2, p.getBudget());
-
-        savePlan.executeUpdate();
-
-        savePlan.close();
-        conn.close();
-    }
-
-    private void updatePlan(Plan p) throws SQLException {
-        Connection conn = db.getConnection();
-
-        PreparedStatement updatePlan = conn.prepareStatement("UPDATE Plan SET name=?, budget=? WHERE id=?;");
-        updatePlan.setString(1, p.getName());
-        updatePlan.setDouble(2, p.getBudget());
-        updatePlan.setInt(3, p.getId());
-
-        updatePlan.executeUpdate();
-
-        updatePlan.close();
     }
 
     public void delete(Integer key) throws SQLException {

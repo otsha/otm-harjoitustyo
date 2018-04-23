@@ -45,4 +45,14 @@ public class ExpenseTest {
         e.setId(2);
         assertEquals(2, e.getId());
     }
+    
+    @Test
+    public void setCategorySetsANewCategory() {
+        e.setCategory(new Category(2, "testCategoryTwo", 22.2, new Plan(2, "testPlanTwo", 225.0)));
+        
+        assertEquals(2, e.getCategory().getId());
+        assertEquals("testCategoryTwo", e.getCategory().getName());
+        assertEquals(22.2, e.getCategory().getAllocated(), 0);
+        assertEquals(2, e.getCategory().getPlan().getId());
+    }
 }

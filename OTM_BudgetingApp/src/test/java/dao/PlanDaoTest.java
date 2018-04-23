@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,7 +45,7 @@ public class PlanDaoTest {
     public void planIsSavedProperly() throws SQLException {
         Plan p = new Plan(1, "test", 10);
 
-        pDao.saveOrUpdate(p);
+        pDao.save(p);
 
         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Plan WHERE id = 1");
         ResultSet rs = stmt.executeQuery();
@@ -60,30 +61,21 @@ public class PlanDaoTest {
             assertEquals(11, p.getBudget(), 0);
         }
     }
-
+    
     @Test
-    public void planIsUpdatedProperly() throws SQLException {
+    public void planIsNotSavedIfOneWithIdenticalNameAlreadyExists() throws SQLException {
         Plan p = new Plan(1, "test", 10);
-
-        pDao.saveOrUpdate(p);
-
-        p.setName("hello");
-        p.setBudget(20);
-
-        pDao.saveOrUpdate(p);
-
-        Plan q = pDao.findOne(1);
-
-        assertEquals(1, q.getId());
-        assertEquals("hello", q.getName());
-        assertEquals((double) 20, q.getBudget(), 0);
+        pDao.save(p);
+        
+        Plan q = new Plan(2, "test", 15);
+        assertFalse(pDao.save(q));
     }
 
     @Test
     public void planIsFetchedProperlyById() throws SQLException {
         Plan p = new Plan(1, "test", 10);
 
-        pDao.saveOrUpdate(p);
+        pDao.save(p);
         Plan q = pDao.findOne(1);
 
         assertEquals(1, q.getId());
@@ -95,7 +87,7 @@ public class PlanDaoTest {
     public void planIsFetchedProperlyByName() throws SQLException {
         Plan p = new Plan(1, "test", 10);
 
-        pDao.saveOrUpdate(p);
+        pDao.save(p);
         Plan q = pDao.findOneByName("test");
 
         assertEquals(1, q.getId());
@@ -108,8 +100,8 @@ public class PlanDaoTest {
         Plan p = new Plan(1, "ptest", 10);
         Plan q = new Plan(2, "qtest", 20);
 
-        pDao.saveOrUpdate(p);
-        pDao.saveOrUpdate(q);
+        pDao.save(p);
+        pDao.save(q);
 
         ArrayList<Plan> list = pDao.findAll();
 
@@ -126,7 +118,7 @@ public class PlanDaoTest {
     public void planIsDeletedCorrectly() throws SQLException {
         Plan p = new Plan(1, "test", 10);
 
-        pDao.saveOrUpdate(p);
+        pDao.save(p);
 
         pDao.delete(p.getId());
 

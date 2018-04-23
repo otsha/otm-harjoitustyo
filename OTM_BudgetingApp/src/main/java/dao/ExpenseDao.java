@@ -89,8 +89,8 @@ public class ExpenseDao {
         disconnect(conn, stmt, rs);
         return list;
     }
-    
-    public void save(Expense e) throws SQLException {
+
+    public boolean save(Expense e) throws SQLException {
         Connection conn = db.getConnection();
         PreparedStatement doesThisExist = conn.prepareStatement("SELECT * FROM Expense WHERE category_id = ? and name = ?;");
         doesThisExist.setInt(1, e.getCategory().getId());
@@ -105,9 +105,12 @@ public class ExpenseDao {
 
             stmt.executeUpdate();
             stmt.close();
+            disconnect(conn, doesThisExist, rs);
+            return true;
+        } else {
+            disconnect(conn, doesThisExist, rs);
+            return false;
         }
-
-        disconnect(conn, doesThisExist, rs);
     }
 
     public void delete(int key) throws SQLException {

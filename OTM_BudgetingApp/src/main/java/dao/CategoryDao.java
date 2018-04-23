@@ -116,7 +116,7 @@ public class CategoryDao {
         }
     }
 
-    public void saveCategory(Category c) throws SQLException {
+    public boolean save(Category c) throws SQLException {
         Connection conn = db.getConnection();
 
         PreparedStatement doesThisExist = conn.prepareStatement("SELECT * FROM Category WHERE plan_id = ? and name = ?;");
@@ -133,9 +133,15 @@ public class CategoryDao {
             stmt.executeUpdate();
 
             stmt.close();
+            disconnect(conn, doesThisExist, rs);
+
+            return true;
+        } else {
+            disconnect(conn, doesThisExist, rs);
+
+            return false;
         }
-        
-        disconnect(conn, doesThisExist, rs);
+
     }
 
     public void delete(Integer key) throws SQLException {

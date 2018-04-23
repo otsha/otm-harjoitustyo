@@ -9,8 +9,6 @@ import data.Expense;
 import data.Plan;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
@@ -49,16 +47,11 @@ public class PlanHandler {
             return null;
         } else {
             Plan p = new Plan(0, name, Double.parseDouble(budget));
-
             try {
-                if (pDao.findOneByName(name) == null) {
-                    pDao.saveOrUpdate(p);
-                    try {
-                        return pDao.findOneByName(p.getName());
-                    } catch (SQLException ex) {
-                        return null;
-                    }
-                } else {
+                pDao.save(p);
+                try {
+                    return pDao.findOneByName(p.getName());
+                } catch (SQLException ex) {
                     return null;
                 }
             } catch (SQLException ex) {
@@ -172,7 +165,7 @@ public class PlanHandler {
             Category c = new Category(0, name, allocationAsDouble, p);
 
             try {
-                cDao.saveCategory(c);
+                cDao.save(c);
                 return true;
             } catch (SQLException ex) {
                 return false;
@@ -269,11 +262,11 @@ public class PlanHandler {
         }
         return false;
     }
-    
+
     // 3.4 Get the total expenses currently in this category
     public double usedByCategory(Category c) {
         double used = 0.0;
-        
+
         try {
             ArrayList<Expense> expenses = eDao.findAllByCategory(c.getId());
             used = expenses.stream().mapToDouble(e -> e.getAmount()).sum();

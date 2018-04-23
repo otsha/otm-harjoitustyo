@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,10 +52,10 @@ public class ExpenseDaoTest {
     @Test
     public void expenseIsSavedProperly() throws SQLException {
         Plan p = new Plan(1, "testPlan", 10);
-        pDao.saveOrUpdate(p);
+        pDao.save(p);
 
         Category c = new Category(1, "testCategory", 5, p);
-        cDao.saveCategory(c);
+        cDao.save(c);
 
         Expense e = new Expense(1, "testExpense", 2.2, c);
         eDao.save(e);
@@ -78,12 +79,27 @@ public class ExpenseDaoTest {
     }
 
     @Test
-    public void expenseIsFetchedProperly() throws SQLException {
+    public void expenseIsNotSavedIfOneWithIdenticalNameAlreadyExistsWithinCategory() throws SQLException {
         Plan p = new Plan(1, "testPlan", 10);
-        pDao.saveOrUpdate(p);
+        pDao.save(p);
 
         Category c = new Category(1, "testCategory", 5, p);
-        cDao.saveCategory(c);
+        cDao.save(c);
+
+        Expense e = new Expense(1, "testExpense", 2.2, c);
+        eDao.save(e);
+
+        Expense x = new Expense(2, "testExpense", 5.1, c);
+        assertFalse(eDao.save(x));
+    }
+
+    @Test
+    public void expenseIsFetchedProperly() throws SQLException {
+        Plan p = new Plan(1, "testPlan", 10);
+        pDao.save(p);
+
+        Category c = new Category(1, "testCategory", 5, p);
+        cDao.save(c);
 
         Expense e = new Expense(1, "testExpense", 2.2, c);
         eDao.save(e);
@@ -97,12 +113,31 @@ public class ExpenseDaoTest {
     }
 
     @Test
-    public void findAllByCategoryIdFindsAllExpenses() throws SQLException {
+    public void expenseIsFetchedProperlyByNameAndCategoryId() throws SQLException {
         Plan p = new Plan(1, "testPlan", 10);
-        pDao.saveOrUpdate(p);
+        pDao.save(p);
 
         Category c = new Category(1, "testCategory", 5, p);
-        cDao.saveCategory(c);
+        cDao.save(c);
+
+        Expense e = new Expense(1, "testExpense", 2.2, c);
+        eDao.save(e);
+        
+        Expense x = eDao.findOneByNameAndCategoryId("testExpense", 1);
+        
+        assertEquals(1, x.getId());
+        assertEquals("testExpense", x.getName());
+        assertEquals(2.2, x.getAmount(), 0);
+        assertEquals(1, x.getCategory().getId());
+    }
+
+    @Test
+    public void findAllByCategoryIdFindsAllExpenses() throws SQLException {
+        Plan p = new Plan(1, "testPlan", 10);
+        pDao.save(p);
+
+        Category c = new Category(1, "testCategory", 5, p);
+        cDao.save(c);
 
         Expense e = new Expense(1, "testExpenseOne", 2.2, c);
         eDao.save(e);
@@ -126,10 +161,10 @@ public class ExpenseDaoTest {
     @Test
     public void expenseIsDeletedCorrectly() throws SQLException {
         Plan p = new Plan(1, "testPlan", 10);
-        pDao.saveOrUpdate(p);
+        pDao.save(p);
 
         Category c = new Category(1, "testCategory", 5, p);
-        cDao.saveCategory(c);
+        cDao.save(c);
 
         Expense e = new Expense(1, "testExpense", 2.2, c);
         eDao.save(e);
@@ -142,10 +177,10 @@ public class ExpenseDaoTest {
     @Test
     public void expensesAreDeletedCorrectlyWhenDeletingByCategoryId() throws SQLException {
         Plan p = new Plan(1, "testPlan", 10);
-        pDao.saveOrUpdate(p);
+        pDao.save(p);
 
         Category c = new Category(1, "testCategory", 5, p);
-        cDao.saveCategory(c);
+        cDao.save(c);
 
         Expense e = new Expense(1, "testExpenseOne", 2.2, c);
         eDao.save(e);
@@ -159,19 +194,35 @@ public class ExpenseDaoTest {
     }
 
     @Test
+    public void expensesAreDeletedCorrectlyWhenDeletingByPlanid() throws SQLException {
+        Plan p = new Plan(1, "testPlan", 10);
+        pDao.save(p);
+
+        Category c = new Category(1, "testCategory", 5, p);
+        cDao.save(c);
+
+        Expense e = new Expense(1, "testExpenseOne", 2.2, c);
+        eDao.save(e);
+
+        Expense x = new Expense(2, "testExpenseTwo", 4.1, c);
+        eDao.save(x);
+
+        eDao.deleteAllByPlanId(1);
+
+        assertTrue(eDao.findAllByCategory(1).isEmpty());
+    }
+
+    @Test
     public void findOneReturnsNullIfExpenseDoesNotExist() throws SQLException {
         Expense e = eDao.findOne(1);
 
         assertEquals(null, e);
     }
-
+    
     @Test
-    public void findOneByNameAndPlanIdReturnsNullIfCategoryDoesNotExist() throws SQLException {
-        Plan p = new Plan(1, "testPlan", 10);
-        pDao.saveOrUpdate(p);
-
-        Category c = cDao.findOneByNameAndPlanId("hello", 1);
-
-        assertEquals(null, c);
+    public void findOneByNameAndCategoryIdReturnsNullIfExpenseDoesNotExist() throws SQLException {
+        Expense e = eDao.findOneByNameAndCategoryId("testExpense", 1);
+        
+        assertEquals(null, e);
     }
 }
