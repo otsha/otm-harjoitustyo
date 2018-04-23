@@ -119,7 +119,7 @@ public class SceneController {
             if (p != null) {
                 editPlan(p);
             } else {
-                inputErrorLabel.setText("Plan could not be created. Either one of the fields is invalid or an error occurred.");
+                inputErrorLabel.setText("Plan could not be created. Either one of the fields is invalid or a plan with this name already exists.");
             }
         });
 
@@ -142,10 +142,10 @@ public class SceneController {
         });
         view.setTop(backToMainMenu);
 
-        // Add labels for plan name, total budget, used & remaining
+        // Add labels for plan name, total budget, how much has been allocated & how much is remaining
         Label budget = new Label(p.getName() + ", Budget: " + p.getBudget());
+        Label allocated = new Label("Allocated: " + planHandler.getAllocated(p));
         Label used = new Label("Used: " + planHandler.getUsed(p));
-        Label remaining = new Label("Remaining: " + (p.getBudget() - planHandler.getUsed(p)));
         Label categoryListLabel = new Label("Categories:");
 
         // Create and populate the category listing
@@ -157,7 +157,6 @@ public class SceneController {
         Button deleteCategoryButton = new Button("Delete");
         deleteCategoryButton.setOnAction((event) -> {
             if (planHandler.deleteCategory(categoryListView, p)) {
-                // Refresh the scene to update the category listing
                 editPlan(p);
             }
         });
@@ -170,12 +169,11 @@ public class SceneController {
         Label categoryAllocationLabel = new Label("Category allocation:");
         TextField categoryAllocation = new TextField();
 
-        // Add a button for creating a category
         Button createCategoryButton = new Button("Create");
         createCategoryButton.setOnAction((event) -> {
             if (planHandler.createCategory(categoryName.getText(), categoryAllocation.getText(), p)) {
-                // Refresh the scene to update the category listing
-                editPlan(p);
+                categoryListView.setItems(planHandler.getAllCategories(p.getId()));
+                allocated.setText("Allocated: " + planHandler.getAllocated(p));
             }
         });
 
@@ -190,8 +188,8 @@ public class SceneController {
         VBox categories = new VBox();
         categories.getChildren().addAll(
                 budget,
+                allocated,
                 used,
-                remaining,
                 categoryListLabel,
                 categoryListView,
                 deleteCategoryButton,
@@ -201,19 +199,77 @@ public class SceneController {
 
         // Viewing the details of a selected category
         VBox selectedCategory = new VBox();
+        selectedCategory.setPadding(insets);
 
-        Label selectedCategoryNameLabel = new Label();
-        Label selectedCategoryAllocationLabel = new Label();
+        Label selectedCategoryLabel = new Label();
+        Label selectedCategoryAllocated = new Label();
+        Label selectedCategoryUsed = new Label();
+        Label expenseListLabel = new Label("Expenses in this category:");
+
+        ListView<String> expenseListView = new ListView<>();
+        expenseListView.setPrefHeight(height / 2);
+
+        // Create a form for managing expenses
+        VBox manageExpensesForm = new VBox();
+
+        Button deleteExpenseButton = new Button("Delete");
+        deleteExpenseButton.setOnAction((event) -> {
+            if (planHandler.editCategory(categoryListView, p) != null) {
+                if (planHandler.deleteExpense(expenseListView, planHandler.editCategory(categoryListView, p))) {
+                    expenseListView.setItems(planHandler.getAllExpenses(planHandler.editCategory(categoryListView, p).getId()));
+                    used.setText("Used: " + planHandler.getUsed(p));
+                    selectedCategoryUsed.setText("Used: " + planHandler.usedByCategory(planHandler.editCategory(categoryListView, p)));
+                }
+            }
+        });
+
+        Label expenseNameLabel = new Label("Expense description:");
+        TextField expenseName = new TextField();
+        Label expenseAmountLabel = new Label("Amount:");
+        TextField expenseAmount = new TextField();
+
+        Button createExpenseButton = new Button("Add");
+        createExpenseButton.setOnAction((event) -> {
+            if (planHandler.editCategory(categoryListView, p) != null) {
+                if (planHandler.createExpense(expenseName.getText(), expenseAmount.getText(), planHandler.editCategory(categoryListView, p))) {
+                    expenseListView.setItems(planHandler.getAllExpenses(planHandler.editCategory(categoryListView, p).getId()));
+                    used.setText("Used: " + planHandler.getUsed(p));
+                    selectedCategoryUsed.setText("Used: " + planHandler.usedByCategory(planHandler.editCategory(categoryListView, p)));
+                }
+            }
+        });
+
+        manageExpensesForm.getChildren().addAll(
+                deleteExpenseButton,
+                expenseNameLabel,
+                expenseName,
+                expenseAmountLabel,
+                expenseAmount,
+                createExpenseButton
+        );
 
         selectedCategory.getChildren().addAll(
-                selectedCategoryNameLabel,
-                selectedCategoryAllocationLabel
+                selectedCategoryLabel,
+                selectedCategoryAllocated,
+                selectedCategoryUsed,
+                expenseListLabel,
+                expenseListView,
+                manageExpensesForm
         );
-        view.setRight(selectedCategory);
+        view.setCenter(selectedCategory);
 
+        // Update the view based on the selected category
         categoryListView.getSelectionModel().selectedItemProperty().addListener((event) -> {
-            selectedCategoryNameLabel.setText(planHandler.editCategory(categoryListView, p).getName());
-            selectedCategoryAllocationLabel.setText("Allocation: " + planHandler.editCategory(categoryListView, p).getAllocated());
+            if (planHandler.editCategory(categoryListView, p) != null) {
+                expenseListView.setItems(planHandler.getAllExpenses(planHandler.editCategory(categoryListView, p).getId()));
+                selectedCategoryLabel.setText(planHandler.editCategory(categoryListView, p).getName());
+                selectedCategoryAllocated.setText("Allocated: " + planHandler.editCategory(categoryListView, p).getAllocated());
+                selectedCategoryUsed.setText("Used: " + planHandler.usedByCategory(planHandler.editCategory(categoryListView, p)));
+            } else {
+                selectedCategoryLabel.setText("");
+                selectedCategoryAllocated.setText("");
+                selectedCategoryUsed.setText("");
+            }
         });
 
         stage.setScene(scene);

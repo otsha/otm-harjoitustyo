@@ -118,15 +118,24 @@ public class CategoryDao {
 
     public void saveCategory(Category c) throws SQLException {
         Connection conn = db.getConnection();
-        PreparedStatement stmt = conn.prepareStatement("INSERT INTO Category (name, allocated, plan_id) VALUES (?, ?, ?);");
-        stmt.setString(1, c.getName());
-        stmt.setDouble(2, c.getAllocated());
-        stmt.setInt(3, c.getPlan().getId());
 
-        stmt.executeUpdate();
+        PreparedStatement doesThisExist = conn.prepareStatement("SELECT * FROM Category WHERE plan_id = ? and name = ?;");
+        doesThisExist.setInt(1, c.getPlan().getId());
+        doesThisExist.setString(2, c.getName());
+        ResultSet rs = doesThisExist.executeQuery();
 
-        stmt.close();
-        conn.close();
+        if (!rs.next()) {
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO Category (name, allocated, plan_id) VALUES (?, ?, ?);");
+            stmt.setString(1, c.getName());
+            stmt.setDouble(2, c.getAllocated());
+            stmt.setInt(3, c.getPlan().getId());
+
+            stmt.executeUpdate();
+
+            stmt.close();
+        }
+        
+        disconnect(conn, doesThisExist, rs);
     }
 
     public void delete(Integer key) throws SQLException {

@@ -13,7 +13,13 @@ public class Database {
         this.address = databaseAddress;
         initTables();
     }
-
+    
+    /**
+     * Tries to connect to the database initialised in the object constructor.
+     * @return Connection
+     * @throws SQLException 
+     */
+    
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(address);
     }
