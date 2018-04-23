@@ -1,3 +1,7 @@
 # Arkkitehtuurikuvaus
+## Sovelluksen arkkitehtuuri pakkauskaaviona
+![Sovelluksen arkkitehtuuri](https://github.com/otsha/otm-harjoitustyo/blob/master/documentation/week5_architecture.png)
 
-![Sovelluksen arkkitehtuuri](https://raw.githubusercontent.com/otsha/otm-harjoitustyo/master/documentation/week4_architecture.png)
+## Sovelluksen tietokantakaavio
+![Sovelluksen tietokantakaavio](https://camo.githubusercontent.com/c47126d18f09c883dde8de9d2a721639c7d64578/68747470733a2f2f79756d6c2e6d652f64323665633663652e706e67)
+
