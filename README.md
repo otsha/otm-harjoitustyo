@@ -11,27 +11,42 @@ Harjoitustyö kevään 2018 kurssille *Ohjelmistotekniikan menetelmät (OTM)*.
 
 * [Työaikaseuranta](https://github.com/otsha/otm-harjoitustyo/blob/master/documentation/log.md)
 
-## Testaus
-**jUnit**-testit voi suorittaa maven-projektin juurikansiossa (OTM_BudgetingApp) käskyllä
+## Komentorivitoiminnot
+### Testaus
+**jUnit**-testit voi suorittaa maven-projektin juurikansiossa ``OTM_BudgetingApp`` käskyllä
 
-`
+```
   mvn test jacoco:report
-`
+```
 
 Testikattavuusraportin sijainti:
 
-`
+```
   target/site/jacoco/index.html
-`
+```
 
 **Checkstyle**-testit saa suoritettua samassa juurikansiossa käskyllä
 
-`
+```
   mvn jxr:jxr checkstyle:checkstyle
-`
+```
 
 ...ja raportin sijainti:
 
-`
+```
   target/site/checkstyle.html
-`
+```
+
+### .jar-pakkauksen generointi
+Suorita maven-projektin juurikansiossa ``OTM_BudgetingApp`` komento
+
+```
+mvn package
+```
+
+Suorituskelpoinen .jar-tiedosto löytyy nyt ***alikansiosta** ``target``, ja sen suorittaminen onnistuu käskyllä
+
+```
+java -jar OTM_BudgetingApp-1.0-SNAPSHOT.jar
+```
+(**HUOM!** Muistathan siirtyä oikeaan kansioon ennen suorittamista)
