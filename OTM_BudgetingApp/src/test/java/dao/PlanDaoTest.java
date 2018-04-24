@@ -43,9 +43,7 @@ public class PlanDaoTest {
 
     @Test
     public void planIsSavedProperly() throws SQLException {
-        Plan p = new Plan(1, "test", 10);
-
-        pDao.save(p);
+        pDao.save("test", 10);
 
         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Plan WHERE id = 1");
         ResultSet rs = stmt.executeQuery();
@@ -56,52 +54,43 @@ public class PlanDaoTest {
             assertEquals("test", q.getName());
             assertEquals((double) 10, q.getBudget(), 0);
         } else {
-            assertEquals(-1, p.getId());
-            assertEquals("fail", p.getName());
-            assertEquals(11, p.getBudget(), 0);
+            assertEquals(-1, 1);
+            assertEquals("fail", "test");
+            assertEquals(11, 10, 0);
         }
     }
     
     @Test
     public void planIsNotSavedIfOneWithIdenticalNameAlreadyExists() throws SQLException {
-        Plan p = new Plan(1, "test", 10);
-        pDao.save(p);
+        pDao.save("test", 10);
         
-        Plan q = new Plan(2, "test", 15);
-        assertFalse(pDao.save(q));
+        assertFalse(pDao.save("test", 15));
     }
 
     @Test
     public void planIsFetchedProperlyById() throws SQLException {
-        Plan p = new Plan(1, "test", 10);
-
-        pDao.save(p);
+        pDao.save("test", 10);
         Plan q = pDao.findOne(1);
 
         assertEquals(1, q.getId());
         assertEquals("test", q.getName());
-        assertEquals((double) 10, p.getBudget(), 0);
+        assertEquals((double) 10, q.getBudget(), 0);
     }
 
     @Test
     public void planIsFetchedProperlyByName() throws SQLException {
-        Plan p = new Plan(1, "test", 10);
-
-        pDao.save(p);
+        pDao.save("test", 10);
         Plan q = pDao.findOneByName("test");
 
         assertEquals(1, q.getId());
         assertEquals("test", q.getName());
-        assertEquals((double) 10, p.getBudget(), 0);
+        assertEquals((double) 10, q.getBudget(), 0);
     }
 
     @Test
     public void findAllFindsAllPlans() throws SQLException {
-        Plan p = new Plan(1, "ptest", 10);
-        Plan q = new Plan(2, "qtest", 20);
-
-        pDao.save(p);
-        pDao.save(q);
+        pDao.save("ptest", 10);
+        pDao.save("qtest", 20);
 
         ArrayList<Plan> list = pDao.findAll();
 
@@ -116,11 +105,9 @@ public class PlanDaoTest {
 
     @Test
     public void planIsDeletedCorrectly() throws SQLException {
-        Plan p = new Plan(1, "test", 10);
+        pDao.save("test", 10);
 
-        pDao.save(p);
-
-        pDao.delete(p.getId());
+        pDao.delete(1);
 
         assertEquals(null, pDao.findOne(1));
     }

@@ -30,12 +30,12 @@ public class CategoryDaoTest {
 
         // Database and connection setup
         this.db = new Database("jdbc:sqlite:test.db");
-        
+
         this.conn = db.getConnection();
 
         this.cDao = new CategoryDao(db);
         this.pDao = new PlanDao(db);
-        
+
     }
 
     @After
@@ -49,11 +49,10 @@ public class CategoryDaoTest {
 
     @Test
     public void categoryIsSavedProperly() throws SQLException {
-        Plan p = new Plan(1, "testPlan", 10);
-        pDao.save(p);
+        pDao.save("testPlan", 10);
+        Plan p = pDao.findOne(1);
 
-        Category c = new Category(1, "testCategory", 5, p);
-        cDao.save(c);
+        cDao.save("testCategory", 5, p);
 
         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Category WHERE id = 1");
         ResultSet rs = stmt.executeQuery();
@@ -65,33 +64,29 @@ public class CategoryDaoTest {
             assertEquals((double) 5, g.getAllocated(), 0);
             assertEquals(1, g.getPlan().getId());
         } else {
-            assertEquals(-1, c.getId());
-            assertEquals("fail", c.getName());
-            assertEquals(6, c.getAllocated(), 0);
-            assertEquals(-1, c.getPlan().getId());
+            assertEquals(-1, 1);
+            assertEquals("fail", "testCategory");
+            assertEquals(6, 5, 0);
+            assertEquals(-1, p.getId());
         }
     }
-    
+
     @Test
     public void categoryIsNotSavedIfOneWithIdenticalNameAlreadyExists() throws SQLException {
-        Plan p = new Plan(1, "testPlan", 10);
-        pDao.save(p);
-        
-        Category c = new Category(1, "testCategory", 5, p);
-        cDao.save(c);
-        
-        Category g = new Category(1, "testCategory", 10, p);
-        assertFalse(cDao.save(g));
-        
+        pDao.save("testPlan", 10);
+        Plan p = pDao.findOne(1);
+
+        cDao.save("testCategory", 5, p);
+
+        assertFalse(cDao.save("testCategory", 10, p));
     }
 
     @Test
     public void categoryIsFetchedProperly() throws SQLException {
-        Plan p = new Plan(1, "testPlan", 10);
-        pDao.save(p);
+        pDao.save("testPlan", 10);
+        Plan p = pDao.findOne(1);
 
-        Category c = new Category(1, "testCategory", 5, p);
-        cDao.save(c);
+        cDao.save("testCategory", 5, p);
 
         Category g = cDao.findOne(1);
         assertEquals(1, g.getId());
@@ -102,11 +97,10 @@ public class CategoryDaoTest {
 
     @Test
     public void categoryIsFetchedProperlyByNameAndPlanId() throws SQLException {
-        Plan p = new Plan(1, "testPlan", 10);
-        pDao.save(p);
-
-        Category c = new Category(1, "testCategory", 5, p);
-        cDao.save(c);
+        pDao.save("testPlan", 10);
+        Plan p = pDao.findOne(1);
+        
+        cDao.save("testCategory", 5, p);
 
         Category g = cDao.findOneByNameAndPlanId("testCategory", 1);
         assertEquals(1, g.getId());
@@ -117,14 +111,12 @@ public class CategoryDaoTest {
 
     @Test
     public void findAllFindsAllCategories() throws SQLException {
-        Plan p = new Plan(1, "testPlan", 10);
-        pDao.save(p);
+        pDao.save("testPlan", 10);
+        Plan p = pDao.findOne(1);
 
-        Category c = new Category(1, "testCategory", 5, p);
-        cDao.save(c);
+        cDao.save("testCategory", 5, p);
 
-        Category g = new Category(2, "testCategoryTwo", 5, p);
-        cDao.save(g);
+        cDao.save("testCategoryTwo", 5, p);
 
         ArrayList<Category> list = cDao.findAll();
 
@@ -141,14 +133,12 @@ public class CategoryDaoTest {
 
     @Test
     public void findAllByPlanIdFindsAllCategories() throws SQLException {
-        Plan p = new Plan(1, "testPlan", 10);
-        pDao.save(p);
+        pDao.save("testPlan", 10);
+        Plan p = pDao.findOne(1);
 
-        Category c = new Category(1, "testCategory", 5, p);
-        cDao.save(c);
+        cDao.save("testCategory", 5, p);
 
-        Category g = new Category(2, "testCategoryTwo", 5, p);
-        cDao.save(g);
+        cDao.save("testCategoryTwo", 5, p);
 
         ArrayList<Category> list = cDao.findAllByPlanId(p.getId());
 
@@ -165,11 +155,10 @@ public class CategoryDaoTest {
 
     @Test
     public void categoryIsDeletedCorrectly() throws SQLException {
-        Plan p = new Plan(1, "testPlan", 10);
-        pDao.save(p);
+        pDao.save("testPlan", 10);
+        Plan p = pDao.findOne(1);
 
-        Category c = new Category(1, "testCategory", 5, p);
-        cDao.save(c);
+        cDao.save("testCategory", 5, p);
 
         cDao.delete(p.getId());
 
@@ -178,14 +167,12 @@ public class CategoryDaoTest {
 
     @Test
     public void categoriesAreDeletedCorrectlyWhenDeletingByPlanId() throws SQLException {
-        Plan p = new Plan(1, "testPlan", 10);
-        pDao.save(p);
+        pDao.save("testPlan", 10);
+        Plan p = pDao.findOne(1);
 
-        Category c = new Category(1, "testCategory", 5, p);
-        cDao.save(c);
+        cDao.save("testCategory", 5, p);
 
-        Category g = new Category(2, "testCategoryTwo", 5, p);
-        cDao.save(g);
+        cDao.save("testCategoryTwo", 5, p);
 
         cDao.deleteAllByPlanId(p.getId());
 
@@ -201,8 +188,8 @@ public class CategoryDaoTest {
 
     @Test
     public void findOneByNameAndPlanIdReturnsNullIfCategoryDoesNotExist() throws SQLException {
-        Plan p = new Plan(1, "testPlan", 10);
-        pDao.save(p);
+        pDao.save("testPlan", 10);
+        Plan p = pDao.findOne(1);
 
         Category c = cDao.findOneByNameAndPlanId("hello", 1);
 

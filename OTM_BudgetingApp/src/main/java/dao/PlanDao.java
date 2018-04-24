@@ -74,16 +74,16 @@ public class PlanDao {
         }
     }
 
-    public boolean save(Plan p) throws SQLException {
+    public boolean save(String name, double budget) throws SQLException {
         Connection conn = db.getConnection();
         PreparedStatement doesThisExist = conn.prepareStatement("SELECT * FROM Plan WHERE name = ?;");
-        doesThisExist.setString(1, p.getName());
+        doesThisExist.setString(1, name);
         ResultSet rs = doesThisExist.executeQuery();
 
         if (!rs.next()) {
             PreparedStatement savePlan = conn.prepareStatement("INSERT INTO Plan (name, budget) VALUES (?, ?);");
-            savePlan.setString(1, p.getName());
-            savePlan.setDouble(2, p.getBudget());
+            savePlan.setString(1, name);
+            savePlan.setDouble(2, budget);
 
             savePlan.executeUpdate();
 

@@ -2,6 +2,7 @@ package dao;
 
 import data.Category;
 import data.Database;
+import data.Plan;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -116,19 +117,19 @@ public class CategoryDao {
         }
     }
 
-    public boolean save(Category c) throws SQLException {
+    public boolean save(String name, double allocation, Plan p) throws SQLException {
         Connection conn = db.getConnection();
 
         PreparedStatement doesThisExist = conn.prepareStatement("SELECT * FROM Category WHERE plan_id = ? and name = ?;");
-        doesThisExist.setInt(1, c.getPlan().getId());
-        doesThisExist.setString(2, c.getName());
+        doesThisExist.setInt(1, p.getId());
+        doesThisExist.setString(2, name);
         ResultSet rs = doesThisExist.executeQuery();
 
         if (!rs.next()) {
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO Category (name, allocated, plan_id) VALUES (?, ?, ?);");
-            stmt.setString(1, c.getName());
-            stmt.setDouble(2, c.getAllocated());
-            stmt.setInt(3, c.getPlan().getId());
+            stmt.setString(1, name);
+            stmt.setDouble(2, allocation);
+            stmt.setInt(3, p.getId());
 
             stmt.executeUpdate();
 

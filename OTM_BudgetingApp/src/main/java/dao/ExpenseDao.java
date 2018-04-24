@@ -90,18 +90,18 @@ public class ExpenseDao {
         return list;
     }
 
-    public boolean save(Expense e) throws SQLException {
+    public boolean save(String name, double amount, Category c) throws SQLException {
         Connection conn = db.getConnection();
         PreparedStatement doesThisExist = conn.prepareStatement("SELECT * FROM Expense WHERE category_id = ? and name = ?;");
-        doesThisExist.setInt(1, e.getCategory().getId());
-        doesThisExist.setString(2, e.getName());
+        doesThisExist.setInt(1, c.getId());
+        doesThisExist.setString(2, name);
         ResultSet rs = doesThisExist.executeQuery();
 
         if (!rs.next()) {
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO Expense (name, amount, category_id) VALUES (?, ?, ?);");
-            stmt.setString(1, e.getName());
-            stmt.setDouble(2, e.getAmount());
-            stmt.setInt(3, e.getCategory().getId());
+            stmt.setString(1, name);
+            stmt.setDouble(2, amount);
+            stmt.setInt(3, c.getId());
 
             stmt.executeUpdate();
             stmt.close();

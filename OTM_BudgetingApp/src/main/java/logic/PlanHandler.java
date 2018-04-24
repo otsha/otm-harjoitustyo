@@ -46,14 +46,17 @@ public class PlanHandler {
         if (name.equals("") || budget.equals("")) {
             return null;
         } else {
-            Plan p = new Plan(0, name, Double.parseDouble(budget));
+            double budgetAsDouble = 0;
+
             try {
-                pDao.save(p);
-                try {
-                    return pDao.findOneByName(p.getName());
-                } catch (SQLException ex) {
-                    return null;
-                }
+                budgetAsDouble = Double.parseDouble(budget);
+            } catch (Exception ex) {
+                return null;
+            }
+
+            try {
+                pDao.save(name, budgetAsDouble);
+                return pDao.findOneByName(name);
             } catch (SQLException ex) {
                 return null;
             }
@@ -162,10 +165,8 @@ public class PlanHandler {
                 return false;
             }
 
-            Category c = new Category(0, name, allocationAsDouble, p);
-
             try {
-                cDao.save(c);
+                cDao.save(name, allocationAsDouble, p);
                 return true;
             } catch (SQLException ex) {
                 return false;
@@ -235,10 +236,8 @@ public class PlanHandler {
                 return false;
             }
 
-            Expense e = new Expense(0, name, amountAsDouble, c);
-
             try {
-                eDao.save(e);
+                eDao.save(name, amountAsDouble, c);
                 return true;
             } catch (SQLException ex) {
                 return false;
