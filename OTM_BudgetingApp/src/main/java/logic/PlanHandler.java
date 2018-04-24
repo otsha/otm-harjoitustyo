@@ -248,6 +248,9 @@ public class PlanHandler {
     // 3.3 Delete the selected expense in the given ListView
     public boolean deleteExpense(ListView<String> list, Category c) {
         try {
+            if (list.getSelectionModel().selectedItemProperty().getValue() == null) {
+                return false;
+            }
             if (!getAllExpenses(c.getId()).isEmpty()) {
                 String[] split = list.getSelectionModel().selectedItemProperty().getValue().split("\t");
                 Expense e = eDao.findOneByNameAndCategoryId(split[0], c.getId());
