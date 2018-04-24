@@ -2,6 +2,9 @@
 
 Harjoitustyö kevään 2018 kurssille *Ohjelmistotekniikan menetelmät (OTM)*.
 
+## Versiot
+* [Pre-release build 1 (Viikko 5)](https://github.com/otsha/otm-harjoitustyo/releases/tag/week5)
+
 ## Dokumentaatio
 * [Käyttöohje](https://github.com/otsha/otm-harjoitustyo/blob/master/documentation/userguide.md)
 
