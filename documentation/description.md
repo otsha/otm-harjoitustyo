@@ -9,11 +9,13 @@ Sovelluksella käyttäjä voi luoda ja tallentaa budjettisuunnitelmia, tarkastel
 
 ## Suunniteltu toiminnallisuus
 - [x] Budjettisuunnitelman luominen ja poistaminen
-- [x] Varojen käyttökohteiden lisääminen ja poistaminen budjettisuunnitelman sisällä
-- Budjettisuunnitelmaan liittyvien tilastojen tarkastelu
-  - Käyttökohteiden prosentuaalinen osuus kokonaisbudjetista
+- [x] Osa-alueiden lisääminen ja poistaminen budjettisuunnitelman sisällä
+- [x] Mahdollisuus merkitä, kuinka paljon varoja budjetoituun osa-alueeseen todellisuudessa käytettiin ts. **kulujen tarkkailu**
+  - [x] Kulujen luominen ja poistaminen kategorioittain
+- [ ] Budjettisuunnitelmaan liittyvien tilastojen tarkastelu
+  - [ ] Käyttökohteiden prosentuaalinen osuus kokonaisbudjetista
+    - [ ] Kaavioina?
   - [x] Meneekö suunnitelma yli budjetin? Kuinka paljon varoja jää, jos ei mene?
-- Mahdollisuus merkitä, kuinka paljon varoja budjetoituun käyttökohteeseen todellisuudessa käytettiin ts. **kulujen tarkkailu**
 
 ## Alustava tietokantakaavio
 ![yUML-kaavio](https://yuml.me/d26ec6ce.png)
