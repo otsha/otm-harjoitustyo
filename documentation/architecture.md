@@ -11,4 +11,4 @@
 
 ## Toiminnallisuudet
 ### Uuden suunnitelman luominen
-![Sekvenssikaavio: uusi suunnitelma](https://github.com/otsha/otm-harjoitustyo/blob/master/documentation/seqDiagram_creating_a_plan.png)
+![Sekvenssikaavio: uusi suunnitelma](https://github.com/otsha/otm-harjoitustyo/blob/master/documentation/seqDiagram_creating_a_plan_v2.png)
