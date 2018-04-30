@@ -3,6 +3,7 @@ package data;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Database {
@@ -23,6 +24,39 @@ public class Database {
     
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(address);
+    }
+    
+    /**
+     * Closes the given Connection, PreparedStatement and ResultSet
+     * @param conn The Connection to be closed
+     * @param stmt The PreparedStatement to be closed
+     * @param rs The ResultSet to be closed
+     * @throws SQLException 
+     * @see data.Database#disconnect(java.sql.Connection, java.sql.PreparedStatement) 
+     * @see java.sql.Connection#close() 
+     * @see java.sql.PreparedStatement#close() 
+     * @see java.sql.ResultSet#close() 
+     */
+    
+    public void disconnect(Connection conn, PreparedStatement stmt, ResultSet rs) throws SQLException {
+        rs.close();
+        stmt.close();
+        conn.close();
+    }
+    
+    /**
+     * Closes the given Connection and PreparedStatement. To be used with Updates or Queries where no ResultSet is used.
+     * @param conn The Connection to be closed
+     * @param stmt The PreparedStatement to be closed
+     * @throws SQLException 
+     * @see data.Database#disconnect(java.sql.Connection, java.sql.PreparedStatement) 
+     * @see java.sql.Connection#close() 
+     * @see java.sql.PreparedStatement#close() 
+     */
+    
+    public void disconnect(Connection conn, PreparedStatement stmt) throws SQLException {
+        stmt.close();
+        conn.close();
     }
 
     private void initTables() {
