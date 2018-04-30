@@ -13,17 +13,18 @@ public class Database {
         this.address = databaseAddress;
         initTables();
     }
-    
+
     /**
      * Tries to connect to the database initialised in the object constructor.
+     *
      * @return Connection
-     * @throws SQLException 
+     * @throws SQLException
      */
     
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(address);
     }
-    
+
     private void initTables() {
         // The following methods will create required tables if they do not already exist in the database
         initPlans();
@@ -45,7 +46,7 @@ public class Database {
 
             conn.close();
         } catch (SQLException e) {
-
+            /* Do nothing */
         }
     }
 
@@ -62,13 +63,13 @@ public class Database {
             );
             createCategoryTable.execute();
             createCategoryTable.close();
-            
+
             conn.close();
         } catch (SQLException e) {
-
+            /* Do nothing */
         }
     }
-    
+
     private void initExpenses() {
         try {
             Connection conn = getConnection();
@@ -82,10 +83,10 @@ public class Database {
             );
             createExpenseTable.execute();
             createExpenseTable.close();
-            
+
             conn.close();
         } catch (SQLException e) {
-
+            /* Do nothing */
         }
     }
 

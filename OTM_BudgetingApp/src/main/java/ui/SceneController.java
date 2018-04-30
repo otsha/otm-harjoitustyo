@@ -59,9 +59,11 @@ public class SceneController {
         // Opening the selected plan
         Button openPlan = new Button("Open...");
         openPlan.setOnAction((event) -> {
-            Plan p = planHandler.openPlan(planListView);
-            if (p != null) {
-                editPlan(p);
+            if (!planHandler.getAllPlans().isEmpty()) {
+                Plan p = planHandler.openPlan(planListView.getSelectionModel().selectedItemProperty().getValue());
+                if (p != null) {
+                    editPlan(p);
+                }
             }
         });
 
@@ -69,10 +71,12 @@ public class SceneController {
         Button deletePlan = new Button("Delete");
 
         deletePlan.setOnAction((event) -> {
-            if (planHandler.deletePlan(planListView) == true) {
-                initialScene();
-            } else {
-                // <To-do: Display an error message here>
+            if (!planHandler.getAllPlans().isEmpty()) {
+                if (planHandler.deletePlan(planListView.getSelectionModel().selectedItemProperty().getValue()) == true) {
+                    initialScene();
+                } else {
+                    // <To-do: Display an error message here>
+                }
             }
         });
 
@@ -156,8 +160,10 @@ public class SceneController {
         // Add a button for deleting categories
         Button deleteCategoryButton = new Button("Delete");
         deleteCategoryButton.setOnAction((event) -> {
-            if (planHandler.deleteCategory(categoryListView, p)) {
-                editPlan(p);
+            if (!planHandler.getAllCategories(p.getId()).isEmpty()) {
+                if (planHandler.deleteCategory(categoryListView.getSelectionModel().selectedItemProperty().getValue(), p)) {
+                    editPlan(p);
+                }
             }
         });
 
@@ -214,11 +220,15 @@ public class SceneController {
 
         Button deleteExpenseButton = new Button("Delete");
         deleteExpenseButton.setOnAction((event) -> {
-            if (planHandler.editCategory(categoryListView, p) != null) {
-                if (planHandler.deleteExpense(expenseListView, planHandler.editCategory(categoryListView, p))) {
-                    expenseListView.setItems(planHandler.getAllExpenses(planHandler.editCategory(categoryListView, p).getId()));
-                    used.setText("Used: " + planHandler.getUsed(p));
-                    selectedCategoryUsed.setText("Used: " + planHandler.usedByCategory(planHandler.editCategory(categoryListView, p)));
+            String selectedCategoryName = categoryListView.getSelectionModel().selectedItemProperty().getValue();
+            if (planHandler.selectedCategory(selectedCategoryName, p) != null) {
+                String expenseName = expenseListView.getSelectionModel().selectedItemProperty().getValue();
+                if (expenseName != null) {
+                    if (planHandler.deleteExpense(expenseName, planHandler.selectedCategory(selectedCategoryName, p))) {
+                        expenseListView.setItems(planHandler.getAllExpenses(planHandler.selectedCategory(selectedCategoryName, p).getId()));
+                        used.setText("Used: " + planHandler.getUsed(p));
+                        selectedCategoryUsed.setText("Used: " + planHandler.usedByCategory(planHandler.selectedCategory(selectedCategoryName, p)));
+                    }
                 }
             }
         });
@@ -230,11 +240,12 @@ public class SceneController {
 
         Button createExpenseButton = new Button("Add");
         createExpenseButton.setOnAction((event) -> {
-            if (planHandler.editCategory(categoryListView, p) != null) {
-                if (planHandler.createExpense(expenseName.getText(), expenseAmount.getText(), planHandler.editCategory(categoryListView, p))) {
-                    expenseListView.setItems(planHandler.getAllExpenses(planHandler.editCategory(categoryListView, p).getId()));
+            String selectedCategoryName = categoryListView.getSelectionModel().selectedItemProperty().getValue();
+            if (planHandler.selectedCategory(selectedCategoryName, p) != null) {
+                if (planHandler.createExpense(expenseName.getText(), expenseAmount.getText(), planHandler.selectedCategory(selectedCategoryName, p))) {
+                    expenseListView.setItems(planHandler.getAllExpenses(planHandler.selectedCategory(selectedCategoryName, p).getId()));
                     used.setText("Used: " + planHandler.getUsed(p));
-                    selectedCategoryUsed.setText("Used: " + planHandler.usedByCategory(planHandler.editCategory(categoryListView, p)));
+                    selectedCategoryUsed.setText("Used: " + planHandler.usedByCategory(planHandler.selectedCategory(selectedCategoryName, p)));
                 }
             }
         });
@@ -260,11 +271,12 @@ public class SceneController {
 
         // Update the view based on the selected category
         categoryListView.getSelectionModel().selectedItemProperty().addListener((event) -> {
-            if (planHandler.editCategory(categoryListView, p) != null) {
-                expenseListView.setItems(planHandler.getAllExpenses(planHandler.editCategory(categoryListView, p).getId()));
-                selectedCategoryLabel.setText(planHandler.editCategory(categoryListView, p).getName());
-                selectedCategoryAllocated.setText("Allocated: " + planHandler.editCategory(categoryListView, p).getAllocated());
-                selectedCategoryUsed.setText("Used: " + planHandler.usedByCategory(planHandler.editCategory(categoryListView, p)));
+            String selectedCategoryName = categoryListView.getSelectionModel().selectedItemProperty().getValue();
+            if (planHandler.selectedCategory(selectedCategoryName, p) != null) {
+                expenseListView.setItems(planHandler.getAllExpenses(planHandler.selectedCategory(selectedCategoryName, p).getId()));
+                selectedCategoryLabel.setText(planHandler.selectedCategory(selectedCategoryName, p).getName());
+                selectedCategoryAllocated.setText("Allocated: " + planHandler.selectedCategory(selectedCategoryName, p).getAllocated());
+                selectedCategoryUsed.setText("Used: " + planHandler.usedByCategory(planHandler.selectedCategory(selectedCategoryName, p)));
             } else {
                 selectedCategoryLabel.setText("");
                 selectedCategoryAllocated.setText("");

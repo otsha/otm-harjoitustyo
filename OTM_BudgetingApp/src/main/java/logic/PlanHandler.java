@@ -35,7 +35,7 @@ public class PlanHandler {
                 planList.stream().map(p -> p.getName()).forEach(n -> items.add(n));
             }
         } catch (SQLException ex) {
-
+            /* Do nothing - an empty list will be returned at the end of the method */
         }
 
         return items;
@@ -63,30 +63,24 @@ public class PlanHandler {
         }
     }
 
-    // 1.3 Return the plan selected in the given ListView object
-    public Plan openPlan(ListView<String> list) {
+    // 1.3 Return the selected plan
+    public Plan openPlan(String name) {
         try {
-            if (!getAllPlans().isEmpty()) {
-                Plan p = pDao.findOneByName(list.getSelectionModel().selectedItemProperty().getValue());
-                return p;
-            }
+            Plan p = pDao.findOneByName(name);
+            return p;
         } catch (SQLException ex) {
             return null;
         }
-        return null;
     }
 
     // 1.4 Delete the plan selected in the given ListView object
-    public boolean deletePlan(ListView<String> list) {
+    public boolean deletePlan(String name) {
         try {
-            if (!getAllPlans().isEmpty()) {
-                Plan p = pDao.findOneByName(list.getSelectionModel().selectedItemProperty().getValue());
-                if (p != null) {
-                    eDao.deleteAllByPlanId(p.getId());
-                    cDao.deleteAllByPlanId(p.getId());
-                    pDao.delete(p.getId());
-                }
-
+            Plan p = pDao.findOneByName(name);
+            if (p != null) {
+                eDao.deleteAllByPlanId(p.getId());
+                cDao.deleteAllByPlanId(p.getId());
+                pDao.delete(p.getId());
                 return true;
             } else {
                 return false;
@@ -146,7 +140,7 @@ public class PlanHandler {
                 categoryList.stream().map(p -> p.getName()).forEach(n -> items.add(n));
             }
         } catch (SQLException ex) {
-
+            /* Do nothing - an empty list will be returned at the end of the method */
         }
 
         return items;
@@ -166,8 +160,7 @@ public class PlanHandler {
             }
 
             try {
-                cDao.save(name, allocationAsDouble, p);
-                return true;
+                return cDao.save(name, allocationAsDouble, p);
             } catch (SQLException ex) {
                 return false;
             }
@@ -175,11 +168,10 @@ public class PlanHandler {
     }
 
     // 2.3 Return the category selected in the given ListView
-    public Category editCategory(ListView<String> list, Plan p) {
+    public Category selectedCategory(String name, Plan p) {
         try {
-            if (!getAllPlans().isEmpty()) {
-                Category c = cDao.findOneByNameAndPlanId(list.getSelectionModel().selectedItemProperty().getValue(), p.getId());
-
+            if (!getAllCategories(p.getId()).isEmpty()) {
+                Category c = cDao.findOneByNameAndPlanId(name, p.getId());
                 return c;
             } else {
                 return null;
@@ -190,21 +182,19 @@ public class PlanHandler {
     }
 
     // 2.4 Delete the category selected in the given ListView
-    public boolean deleteCategory(ListView<String> list, Plan p) {
+    public boolean deleteCategory(String name, Plan p) {
         try {
-            if (!getAllPlans().isEmpty()) {
-                Category c = cDao.findOneByNameAndPlanId(list.getSelectionModel().selectedItemProperty().getValue(), p.getId());
-                if (c != null) {
-                    eDao.deleteAllByCategoryId(c.getId());
-                    cDao.delete(c.getId());
-                }
+            Category c = cDao.findOneByNameAndPlanId(name, p.getId());
+            if (c != null) {
+                eDao.deleteAllByCategoryId(c.getId());
+                cDao.delete(c.getId());
                 return true;
+            } else {
+                return false;
             }
         } catch (SQLException ex) {
             return false;
         }
-
-        return false;
     }
 
     // 3 Expenses
@@ -217,7 +207,7 @@ public class PlanHandler {
                 expenseList.stream().forEach(e -> items.add(e.getName() + "\t" + e.getAmount()));
             }
         } catch (SQLException ex) {
-
+            /* Do nothing - an empty list will be returned at the end of the method */
         }
 
         return items;
@@ -246,23 +236,23 @@ public class PlanHandler {
     }
 
     // 3.3 Delete the selected expense in the given ListView
-    public boolean deleteExpense(ListView<String> list, Category c) {
+    public boolean deleteExpense(String name, Category c) {
         try {
-            if (list.getSelectionModel().selectedItemProperty().getValue() == null) {
-                return false;
-            }
             if (!getAllExpenses(c.getId()).isEmpty()) {
-                String[] split = list.getSelectionModel().selectedItemProperty().getValue().split("\t");
+                String[] split = name.split("\t");
                 Expense e = eDao.findOneByNameAndCategoryId(split[0], c.getId());
                 if (e != null) {
                     eDao.delete(e.getId());
+                    return true;
+                } else {
+                    return false;
                 }
-                return true;
+            } else {
+                return false;
             }
         } catch (SQLException ex) {
             return false;
         }
-        return false;
     }
 
     // 3.4 Get the total expenses currently in this category
