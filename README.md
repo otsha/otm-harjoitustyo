@@ -53,3 +53,15 @@ Suorituskelpoinen .jar-tiedosto löytyy nyt ***alikansiosta** ``target``, ja sen
 java -jar OTM_BudgetingApp-1.0-SNAPSHOT.jar
 ```
 (**HUOM!** Muistathan siirtyä oikeaan kansioon ennen suorittamista)
+
+### JavaDoc
+JavaDocin saat generoitua suorittamalla maven-projektin juurikansiossa ``OTM_BudgetingApp`` komennon
+
+```
+mvn javadoc:javadoc
+```
+JavaDoc löytyy nyt osoitteesta ``target/site/apidocs/`` ja voit tarkastella sitä selaimellasi avaamalla tiedoston (esim. chromium-selaimella):
+```
+chromium-browser target/site/apidocs/index.html
+```
+
