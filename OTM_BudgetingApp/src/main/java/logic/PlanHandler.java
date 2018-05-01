@@ -11,7 +11,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.chart.PieChart;
 
 public class PlanHandler {
 
@@ -287,6 +286,30 @@ public class PlanHandler {
             }
         } catch (SQLException ex) {
             return false;
+        }
+    }
+
+    /**
+     * Request a list of all Expenses associated with the given Category, then
+     * sum the amounts of the Expenses.
+     *
+     * @param c The Category to be examined.
+     * @return The amount of funds actually used within the given Category
+     * @see dao.ExpenseDao#findAllByCategory(int)
+     * @see logic.PlanHandler#getUsed(data.Plan)
+     */
+    public double getUsedByCategory(Category c) {
+        double used = 0;
+        try {
+            ArrayList<Expense> expenses = eDao.findAllByCategory(c.getId());
+
+            if (!expenses.isEmpty()) {
+                used = expenses.stream().mapToDouble(e -> e.getAmount()).sum();
+            }
+
+            return used;
+        } catch (SQLException ex) {
+            return used;
         }
     }
 

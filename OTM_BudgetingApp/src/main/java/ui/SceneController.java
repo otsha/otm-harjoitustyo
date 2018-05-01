@@ -145,17 +145,17 @@ public class SceneController {
 
         // Create the navigation menu
         HBox nav = new HBox();
-        
+
         Button backToMainMenu = new Button("<");
         backToMainMenu.setOnAction((event) -> {
             initialScene();
         });
-        
+
         Button viewChartsButton = new Button("View charts");
         viewChartsButton.setOnAction((event) -> {
             viewCharts(p);
         });
-        
+
         nav.getChildren().addAll(backToMainMenu, viewChartsButton);
         view.setTop(nav);
 
@@ -299,50 +299,89 @@ public class SceneController {
 
         stage.setScene(scene);
     }
-    
+
     // View visual data related to the plan
     public void viewCharts(Plan p) {
-        
+
         BorderPane view = setup();
         Scene scene = new Scene(view);
 
         // Create the navigation menu
         HBox nav = new HBox();
-        
+
         Button backToMainMenu = new Button("<");
         backToMainMenu.setOnAction((event) -> {
             initialScene();
         });
-        
+
         Button backToEditing = new Button("Edit plan...");
         backToEditing.setOnAction((event) -> {
             editPlan(p);
         });
-        
-        nav.getChildren().addAll(backToMainMenu, backToEditing);
-        view.setTop(nav);
-        
-        // Create the data view
-        VBox dataView = new VBox();
-        Label totalBudgetLabel = new Label("Total budget: " + p.getBudget());
+
+        // Create the data view for viewing all allocations
+        VBox dataViewAllocations = new VBox();
+        Label totalBudgetLabelAllocationView = new Label("Total budget: " + p.getBudget());
         Label unAllocatedLabel = new Label("Unallocated: " + (p.getBudget() - planHandler.getAllocated(p)));
-        
-        // Create a pie chart of the usage of funds
-        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+
+        // Create a pie chart displaying fund allocation
+        ObservableList<PieChart.Data> pieChartAllocationData = FXCollections.observableArrayList();
         ObservableList<String> categoryNames = planHandler.getAllCategories(p.getId());
-        categoryNames.stream().forEach(cName ->{
-            pieChartData.add(new PieChart.Data(cName, planHandler.selectedCategory(cName, p).getAllocated()));
+        categoryNames.stream().forEach(cName -> {
+            pieChartAllocationData.add(new PieChart.Data(cName, planHandler.selectedCategory(cName, p).getAllocated()));
         });
-        
-        PieChart chart = new PieChart(pieChartData);
-        chart.setTitle("Funds allocated to categories");
-        dataView.getChildren().addAll(
-                totalBudgetLabel,
+
+        PieChart allocationChart = new PieChart(pieChartAllocationData);
+        allocationChart.setTitle("Fund allocation by category");
+        dataViewAllocations.getChildren().addAll(
+                totalBudgetLabelAllocationView,
                 unAllocatedLabel,
-                chart
+                allocationChart
         );
-        view.setCenter(dataView);
-        
+
+        // Create the data view for viewing fund usage
+        VBox dataViewUsages = new VBox();
+        Label totalBudgetLabelUsageView = new Label("Total budget: " + p.getBudget());
+        Label totalUsedLabel = new Label("Used: " + planHandler.getUsed(p));
+
+        // Create a pie chart displaying fund usage
+        ObservableList<PieChart.Data> pieChartUsageData = FXCollections.observableArrayList();
+        categoryNames.stream().forEach(cName -> {
+            pieChartUsageData.add(new PieChart.Data(cName, planHandler.getUsedByCategory(planHandler.selectedCategory(cName, p))));
+        });
+
+        PieChart usageChart = new PieChart(pieChartUsageData);
+        usageChart.setTitle("Fund usage by category");
+        dataViewUsages.getChildren().addAll(
+                totalBudgetLabelUsageView,
+                totalUsedLabel,
+                usageChart
+        );
+
+        // View the allocation chart as default
+        view.setCenter(dataViewAllocations);
+
+        // Create a button for switching to the usage chart
+        Button viewFundUsageButton = new Button("Fund usage");
+        viewFundUsageButton.setOnAction((event) -> {
+            view.setCenter(dataViewUsages);
+        });
+
+        // Create a button for switching to the allocation chart
+        Button viewFundAllocationButton = new Button("Fund allocation");
+        viewFundAllocationButton.setOnAction((event) -> {
+            view.setCenter(dataViewAllocations);
+        });
+
+        // Populate the navigation menu
+        nav.getChildren().addAll(
+                backToMainMenu,
+                backToEditing,
+                viewFundAllocationButton,
+                viewFundUsageButton
+        );
+        view.setTop(nav);
+
         stage.setScene(scene);
     }
 
