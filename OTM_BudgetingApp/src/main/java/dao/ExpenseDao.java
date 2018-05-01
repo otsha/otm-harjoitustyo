@@ -129,7 +129,6 @@ public class ExpenseDao {
         doesThisExist.setInt(1, c.getId());
         doesThisExist.setString(2, name);
         ResultSet rs = doesThisExist.executeQuery();
-        doesThisExist.close();
 
         if (!rs.next()) {
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO Expense (name, amount, category_id) VALUES (?, ?, ?);");
@@ -138,7 +137,7 @@ public class ExpenseDao {
             stmt.setInt(3, c.getId());
 
             stmt.executeUpdate();
-            stmt.close();
+            doesThisExist.close();
             db.disconnect(conn, stmt, rs);
             return true;
         } else {

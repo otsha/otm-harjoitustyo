@@ -8,7 +8,6 @@ import data.Database;
 import data.Plan;
 import java.io.File;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import javafx.collections.ObservableList;
 import org.junit.After;
@@ -172,6 +171,19 @@ public class PlanHandlerTest {
         cDao.save("testCategoryOne", 2.0, p);
 
         assertFalse(planHandler.deleteCategory("testCategoryTwo", p));
+    }
+
+    @Test
+    public void getUsedByCategoryReturnsTheCorrectAmountOfFundsUsedWIthinACategory() throws SQLException {
+        pDao.save("testPlanOne", 10.0);
+        Plan p = pDao.findOneByName("testPlanOne");
+        cDao.save("testCategoryOne", 2.0, p);
+        Category c = cDao.findOne(1);
+        eDao.save("testExpenseOne", 2.2, c);
+        eDao.save("testExpenseTwo", 3.2, c);
+        eDao.save("testExpenseThree", 4.19, c);
+
+        assertEquals(9.59, planHandler.getUsedByCategory(c), 0);
     }
 
     @Test
