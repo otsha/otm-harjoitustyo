@@ -1,6 +1,5 @@
 package ui;
 
-import data.Category;
 import data.Plan;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -330,9 +329,18 @@ public class SceneController {
         categoryNames.stream().forEach(cName -> {
             pieChartAllocationData.add(new PieChart.Data(cName, planHandler.selectedCategory(cName, p).getAllocated()));
         });
+        
+        // Add unallocated funds / budget overflow to the piechart
+        double unAllocated = p.getBudget() - planHandler.getAllocated(p);
+        if (unAllocated > 0) {
+            pieChartAllocationData.add(new PieChart.Data("Unallocated", (p.getBudget() - planHandler.getAllocated(p))));
+        } else {
+            pieChartAllocationData.add(new PieChart.Data("Total overflow", (planHandler.getAllocated(p) - p.getBudget())));
+        }
 
         PieChart allocationChart = new PieChart(pieChartAllocationData);
         allocationChart.setTitle("Fund allocation by category");
+        allocationChart.setLabelLineLength(20);
         dataViewAllocations.getChildren().addAll(
                 totalBudgetLabelAllocationView,
                 unAllocatedLabel,
@@ -349,9 +357,18 @@ public class SceneController {
         categoryNames.stream().forEach(cName -> {
             pieChartUsageData.add(new PieChart.Data(cName, planHandler.getUsedByCategory(planHandler.selectedCategory(cName, p))));
         });
+        
+        // Add unused funds / budget overflow to the piechart
+        double unUsed = p.getBudget() - planHandler.getUsed(p);
+        if (unUsed > 0) {
+            pieChartUsageData.add(new PieChart.Data("Unused", (p.getBudget() - planHandler.getUsed(p))));
+        } else {
+            pieChartUsageData.add(new PieChart.Data("Total overflow", (planHandler.getUsed(p) - p.getBudget())));
+        }
 
         PieChart usageChart = new PieChart(pieChartUsageData);
         usageChart.setTitle("Fund usage by category");
+        usageChart.setLabelLineLength(20);
         dataViewUsages.getChildren().addAll(
                 totalBudgetLabelUsageView,
                 totalUsedLabel,
