@@ -1,8 +1,12 @@
 package ui;
 
+import data.Category;
 import data.Plan;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -139,12 +143,21 @@ public class SceneController {
         BorderPane view = setup();
         Scene scene = new Scene(view);
 
-        // Add a back button
+        // Create the navigation menu
+        HBox nav = new HBox();
+        
         Button backToMainMenu = new Button("<");
         backToMainMenu.setOnAction((event) -> {
             initialScene();
         });
-        view.setTop(backToMainMenu);
+        
+        Button viewChartsButton = new Button("View charts");
+        viewChartsButton.setOnAction((event) -> {
+            viewCharts(p);
+        });
+        
+        nav.getChildren().addAll(backToMainMenu, viewChartsButton);
+        view.setTop(nav);
 
         // Add labels for plan name, total budget, how much has been allocated & how much is remaining
         Label budget = new Label(p.getName() + ", Budget: " + p.getBudget());
@@ -284,6 +297,52 @@ public class SceneController {
             }
         });
 
+        stage.setScene(scene);
+    }
+    
+    // View visual data related to the plan
+    public void viewCharts(Plan p) {
+        
+        BorderPane view = setup();
+        Scene scene = new Scene(view);
+
+        // Create the navigation menu
+        HBox nav = new HBox();
+        
+        Button backToMainMenu = new Button("<");
+        backToMainMenu.setOnAction((event) -> {
+            initialScene();
+        });
+        
+        Button backToEditing = new Button("Edit plan...");
+        backToEditing.setOnAction((event) -> {
+            editPlan(p);
+        });
+        
+        nav.getChildren().addAll(backToMainMenu, backToEditing);
+        view.setTop(nav);
+        
+        // Create the data view
+        VBox dataView = new VBox();
+        Label totalBudgetLabel = new Label("Total budget: " + p.getBudget());
+        Label unAllocatedLabel = new Label("Unallocated: " + (p.getBudget() - planHandler.getAllocated(p)));
+        
+        // Create a pie chart of the usage of funds
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+        ObservableList<String> categoryNames = planHandler.getAllCategories(p.getId());
+        categoryNames.stream().forEach(cName ->{
+            pieChartData.add(new PieChart.Data(cName, planHandler.selectedCategory(cName, p).getAllocated()));
+        });
+        
+        PieChart chart = new PieChart(pieChartData);
+        chart.setTitle("Funds allocated to categories");
+        dataView.getChildren().addAll(
+                totalBudgetLabel,
+                unAllocatedLabel,
+                chart
+        );
+        view.setCenter(dataView);
+        
         stage.setScene(scene);
     }
 
