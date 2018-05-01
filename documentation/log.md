@@ -12,5 +12,6 @@
 | 24.4 | 2,5       | Dao-luokkien tallentamismetodien refaktorointi ja testien korjaus, ensimmäisen sekvenssikaavion piirtäminen, dokumentaation päivitys, ensimmäinen release
 | 26.4 | ~0,25     | Dokumentaation päivitys: Lisäohjeita käyttöoppaaseen ja suunnitelman luomista kuvaavan sekvenssikaavion tarkennus
 | 30.4 | ~3        | Pientä refaktorointia, jUnit-testien kirjoittaminen PlanHandler-luokalle, JavaDocit kaikille kolmelle Dao-luokalle, Database-luokalle sekä PlanHandler-luokalle
+| 1.5  | ~2,5      | Uusi ominaisuus: Budjettisuunnitelmiin liittyvän tiedon visualisointi, dokumentaation päivitys (arkkitehtuuri, käyttöohje), toinen release
 
-Yhteensä: ~27,75h
+Yhteensä: ~30,25h
