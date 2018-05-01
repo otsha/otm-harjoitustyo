@@ -12,9 +12,9 @@ Sovelluksella käyttäjä voi luoda ja tallentaa budjettisuunnitelmia, tarkastel
 - [x] Osa-alueiden lisääminen ja poistaminen budjettisuunnitelman sisällä
 - [x] Mahdollisuus merkitä, kuinka paljon varoja budjetoituun osa-alueeseen todellisuudessa käytettiin ts. **kulujen tarkkailu**
   - [x] Kulujen luominen ja poistaminen kategorioittain
-- [ ] Budjettisuunnitelmaan liittyvien tilastojen tarkastelu
+- [x] Budjettisuunnitelmaan liittyvien tilastojen tarkastelu
   - [ ] Käyttökohteiden prosentuaalinen osuus kokonaisbudjetista
-    - [ ] Kaavioina?
+    - [x] Kaavioina?
   - [x] Meneekö suunnitelma yli budjetin? Kuinka paljon varoja jää, jos ei mene?
 
 ## Alustava tietokantakaavio
