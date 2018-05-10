@@ -66,6 +66,17 @@ public class PlanHandlerTest {
         assertEquals("testPlan", p.getName());
         assertEquals(10.0, p.getBudget(), 0);
     }
+    
+    @Test
+    public void createPlanReturnsNullIfPlanNameIsEmpty() throws SQLException {
+        assertEquals(null, planHandler.createPlan("", "10.0"));
+    }
+    
+    
+    @Test
+    public void createPlanReturnsNullIfPlanBudgetIsEmpty() throws SQLException {
+        assertEquals(null, planHandler.createPlan("testPlanOne", ""));
+    }
 
     @Test
     public void openPlanReturnsTheSelectedPlan() throws SQLException {
@@ -117,6 +128,16 @@ public class PlanHandlerTest {
     }
 
     @Test
+    public void getUsedReturnsZeroIfNoExpensesAreMarked() throws SQLException {
+        pDao.save("testPlanOne", 10.0);
+        Plan p = pDao.findOneByName("testPlanOne");
+        cDao.save("testCategoryOne", 2.0, p);
+        cDao.save("testCategoryTwo", 6.0, p);
+
+        assertEquals(0, planHandler.getUsed(p), 0);
+    }
+
+    @Test
     public void getAllCategoriesGetsAllCategoryNamesAsAnObservableList() throws SQLException {
         pDao.save("testPlanOne", 10.0);
         Plan p = pDao.findOne(1);
@@ -126,6 +147,14 @@ public class PlanHandlerTest {
         ObservableList<String> items = planHandler.getAllCategories(p.getId());
         assertTrue(items.contains("testCategoryOne"));
         assertTrue(items.contains("testCategoryTwo"));
+    }
+
+    @Test
+    public void getAllCategoriesReturnsAnEmptyListIfNoCategoriesExist() throws SQLException {
+        pDao.save("testPlanOne", 10.0);
+        Plan p = pDao.findOne(1);
+
+        assertTrue(planHandler.getAllCategories(p.getId()).isEmpty());
     }
 
     @Test
@@ -143,6 +172,22 @@ public class PlanHandlerTest {
     }
 
     @Test
+    public void createCategoryReturnsFalseIfCategoryNameIsEmpty() throws SQLException {
+        pDao.save("testPlanOne", 10.0);
+        Plan p = pDao.findOne(1);
+
+        assertFalse(planHandler.createCategory("", "2.0", p));
+    }
+
+    @Test
+    public void createCategoryReturnsFalseIfCategoryAllocationIsEmpty() throws SQLException {
+        pDao.save("testPlanOne", 10.0);
+        Plan p = pDao.findOne(1);
+
+        assertFalse(planHandler.createCategory("testCategoryOne", "", p));
+    }
+
+    @Test
     public void selectedCategoryReturnsTheSelectedCategory() throws SQLException {
         pDao.save("testPlanOne", 10.0);
         Plan p = pDao.findOne(1);
@@ -156,6 +201,14 @@ public class PlanHandlerTest {
     }
 
     @Test
+    public void selectedCategoryReturnsNullIfNoCategoriesExist() throws SQLException {
+        pDao.save("testPlanOne", 10.0);
+        Plan p = pDao.findOne(1);
+
+        assertEquals(null, planHandler.selectedCategory("testCategory   ", p));
+    }
+
+    @Test
     public void deleteCategoryReturnsTrueIfCategoryWasDeleted() throws SQLException {
         pDao.save("testPlanOne", 10.0);
         Plan p = pDao.findOne(1);
@@ -165,7 +218,7 @@ public class PlanHandlerTest {
     }
 
     @Test
-    public void deleteCategoryReturnsFalseIfCategoryWasNotDeleted() throws SQLException {
+    public void deleteCategoryReturnsFalseIfCategoryDoesNotExist() throws SQLException {
         pDao.save("testPlanOne", 10.0);
         Plan p = pDao.findOne(1);
         cDao.save("testCategoryOne", 2.0, p);
@@ -184,6 +237,16 @@ public class PlanHandlerTest {
         eDao.save("testExpenseThree", 4.19, c);
 
         assertEquals(9.59, planHandler.getUsedByCategory(c), 0);
+    }
+
+    @Test
+    public void getUsedByCategoryReturnsZeroIfNoExpensesAreMarked() throws SQLException {
+        pDao.save("testPlanOne", 10.0);
+        Plan p = pDao.findOneByName("testPlanOne");
+        cDao.save("testCategoryOne", 2.0, p);
+        Category c = cDao.findOne(1);
+
+        assertEquals(0, planHandler.getUsedByCategory(c), 0);
     }
 
     @Test
@@ -211,6 +274,26 @@ public class PlanHandlerTest {
     }
 
     @Test
+    public void createExpenseReturnsFalseIfNameIsEmpty() throws SQLException {
+        pDao.save("testPlanOne", 10.0);
+        Plan p = pDao.findOne(1);
+        cDao.save("testCategoryOne", 2.0, p);
+        Category c = cDao.findOne(1);
+
+        assertFalse(planHandler.createExpense("", "1.19", c));
+    }
+    
+    @Test
+    public void createExpenseReturnsFalseIfAmountIsEmpty() throws SQLException {
+         pDao.save("testPlanOne", 10.0);
+        Plan p = pDao.findOne(1);
+        cDao.save("testCategoryOne", 2.0, p);
+        Category c = cDao.findOne(1);
+
+        assertFalse(planHandler.createExpense("testExpenseOne", "", c));
+    }
+
+    @Test
     public void createExpenseReturnsFalseIfExpenseWasNotCreated() throws SQLException {
         pDao.save("testPlanOne", 10.0);
         Plan p = pDao.findOne(1);
@@ -231,13 +314,24 @@ public class PlanHandlerTest {
     }
 
     @Test
-    public void deleteExpenseReturnsFalseIfExpenseWasNotDeleted() throws SQLException {
+    public void deleteExpenseReturnsFalseIfNoExpensesExist() throws SQLException {
         pDao.save("testPlanOne", 10.0);
         Plan p = pDao.findOne(1);
         cDao.save("testCategoryOne", 2.0, p);
         Category c = cDao.findOne(1);
 
         assertFalse(planHandler.deleteExpense("testExpenseOne", c));
+    }
+    
+    @Test
+    public void deleteExpenseReturnsFalseIfExpenseDoesNotExist() throws SQLException {
+        pDao.save("testPlanOne", 10.0);
+        Plan p = pDao.findOne(1);
+        cDao.save("testCategoryOne", 2.0, p);
+        Category c = cDao.findOne(1);
+        eDao.save("testExpenseOne", 1.19, c);
+
+        assertFalse(planHandler.deleteExpense("testExpenseTwo", c));
     }
 
     @Test
@@ -249,7 +343,7 @@ public class PlanHandlerTest {
         Category c = cDao.findOne(1);
         Category g = cDao.findOne(2);
         eDao.save("testExpenseOne", 2.2, c);
-        eDao.save("testExpenseTwo", 3.2, c);
+        eDao.save("testExpenseTwo", 3.2, c);    
         eDao.save("testExpenseThree", 4.19, g);
 
         assertEquals(5.4, planHandler.usedByCategory(c), 0);
