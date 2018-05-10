@@ -4,9 +4,11 @@ Harjoitustyö kevään 2018 kurssille *Ohjelmistotekniikan menetelmät (OTM)*.
 
 ## Versiot
 ### Nykyinen
-* [Pre-release build 2 (Viikko 6)](https://github.com/otsha/otm-harjoitustyo/releases/tag/week6)
+* [Pre-release build 3 (loppupalautus)](https://github.com/otsha/otm-harjoitustyo/releases/tag/final-deadline)
 
 ### Vanhemmat
+* [Pre-release build 2 (Viikko 6)](https://github.com/otsha/otm-harjoitustyo/releases/tag/week6)
+
 * [Pre-release build 1 (Viikko 5)](https://github.com/otsha/otm-harjoitustyo/releases/tag/week5)
 
 ## Dokumentaatio
@@ -58,7 +60,7 @@ mvn package
 Suorituskelpoinen .jar-tiedosto löytyy nyt ***alikansiosta*** ``target``, ja sen suorittaminen onnistuu käskyllä
 
 ```
-java -jar OTM_BudgetingApp-1.0-SNAPSHOT.jar
+java -jar OTM_BudgetingApp-PRERELEASE-3.jar
 ```
 (**HUOM!** Muistathan siirtyä oikeaan kansioon ennen suorittamista)
 
