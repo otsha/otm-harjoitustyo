@@ -55,3 +55,5 @@ Sovelluksen käyttämillä tietueilla (``Plan``, ``Category``, ``Expense``) on h
 
 ## Testauksen heikkouksia
 Ehkä suurin testauksen heikkous on se, että SQL-virhetapauksia (``SQLException``) ei testata erikseen. Tämä johtaa suureen haarautumien testauksen puutteeseen etenkin ``PlanHandler`` -luokassa.
+
+Toinen testaamisen heikkous on se, että jotkin testit testaavat hyvinkin samanlaisia asioita. Esimerkiksi ``PlanHandler`` -luokan testit menevät paljolti päällekäin dao-luokkien testauksen kanssa (oleellisena erona tosin se, mitä metodit palauttavat).
