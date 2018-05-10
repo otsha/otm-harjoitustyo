@@ -4,6 +4,9 @@
 * [Projektin kuvaus](https://github.com/otsha/otm-harjoitustyo/blob/master/documentation/description.md)
 
 ## Sisällysluettelo
+- 0 [Käytön aloittaminen](#sovelluksen-käytön-aloittaminen)
+  - 0.1 [Julkaisut](#julkaisut)
+  - 0.2 [Suorittaminen](#suorittaminen)
 - 1 [Uuden budjettisuunnitelman luominen](#uuden-budjettisuunnitelman-luominen)
 - 2 [Olemassaolevan budjettisuunnitelman avaaminen](#olemassaolevan-budjettisuunnitelman-avaaminen)
 - 3 [Budjettisuunnitelman muokkaaminen](#budjettisuunnitelman-muokkaaminen)
@@ -17,8 +20,27 @@
   - 5.1 [Varatut kulut](#varatut-kulut)
   - 5.2 [Käytetyt varat](#käytetyt-varat)
   
+## Sovelluksen käytön aloittaminen
 
-Tämänhetkisessä versiossa käyttäjä voi luoda, poistaa, tarkastella ja muokata budjettisuunnitelmia.
+### Julkaisut
+**Uusin versio:**
+  * [Pre-release build 3 (Loppupalautus)](https://github.com/otsha/otm-harjoitustyo/releases/tag/final-deadline)
+
+**Vanhat versiot:**
+  * [Pre-release build 2 (Viikko 6)](https://github.com/otsha/otm-harjoitustyo/releases/tag/week6)
+  * [Pre-release build 1 (Viikko 5)](https://github.com/otsha/otm-harjoitustyo/releases/tag/week5)
+
+***HUOM!** Käyttöopas vastaa uusimman version toiminnallisuutta!*
+
+### Suorittaminen
+**Sovellus on toteutettu Javalla. Tarvitset siis ainakin Javan version 1.8 suorittaaksesi sovelluksen.**
+
+Suorita seuraava komentorivikomento hakemistossa, johon latasit tiedoston:
+```
+java -jar OTM_BudgetingApp-PRERELEASE-3.jar
+```
+
+*Vaihtoehtoisesti* klikkaa kahdesti .jar -pakkausta järjestelmäsi graafisessa käyttöliittymässä (Sovellus saattaa tarvita tähän erillisen luvan, jonka voit antaa sille sen ominaisuuksissa).
 
 ## Uuden budjettisuunnitelman luominen
 - Valitse sovelluksen ensimmäisestä näkymästä "New..."
