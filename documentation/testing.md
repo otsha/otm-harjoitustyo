@@ -7,6 +7,7 @@
     - [Dao-luokat](#dao-luokat)
     - [Logiikka](#logiikka)
     - [Data](#data)
+  - [Käyttöjärjestelmätestaus](#käyttöjärjestelmätestaus)
   - [Testauksen heikkouksia](#testauksen-heikkouksia)
 
 ## Testausohjeet
@@ -53,7 +54,16 @@ Sovelluksen käyttämillä tietueilla (``Plan``, ``Category``, ``Expense``) on h
 
 ``Database`` -luokan testaaminen tapahtuu välillisesti ``dao`` -luokkien testauksen kautta, joten sillä ei ole omia testejä.
 
+## Käyttöjärjestelmätestaus
+Sovelluksen on todettu toimivan Linux-järjestelmillä, joissa on asennettuna Java 1.8 ja SQLite3. Ei ole varmuutta, tarvitseeko sovellus SQLite3:n, jotta JDBC-kirjasto toimisi halutulla tavalla.
+
+Sovelluksen voi suorittaa joko komentoriviltä tai tuplaklikkaamalla pakkausta, kun tarvittavat suoritusluvat on annettu. Sovellus ei vaadi muita tiedostoja toimiakseen, sillä tietokantatiedosto luodaan sovelluksen käynnistyessä, jos sitä ei ole olemassa. Tietojen pysyväistalletuksen kannalta tietokannan olemassaolo on tietenkin tärkeää.
+
+Sovelluksella pystyy suorittamaan kaikki [määrittelydokumentissa](https://github.com/otsha/otm-harjoitustyo/blob/master/documentation/description.md) ilmaistut käyttötapaukset.
+
 ## Testauksen heikkouksia
 Ehkä suurin testauksen heikkous on se, että SQL-virhetapauksia (``SQLException``) ei testata erikseen. Tämä johtaa suureen haarautumien testauksen puutteeseen etenkin ``PlanHandler`` -luokassa.
 
 Toinen testaamisen heikkous on se, että jotkin testit testaavat hyvinkin samanlaisia asioita. Esimerkiksi ``PlanHandler`` -luokan testit menevät paljolti päällekäin dao-luokkien testauksen kanssa (oleellisena erona tosin se, mitä metodit palauttavat).
+
+Viimeisenä merkittävänä heikkoutena on tietenkin se, ettei sovellusta ole testattu muilla käyttöjärjestelmillä kuin Linuxilla.
