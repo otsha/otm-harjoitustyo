@@ -50,6 +50,7 @@ public class SceneController {
 
         // Setup the plan opening view
         VBox openingMenu = new VBox();
+        Label errorLabel = new Label();
 
         // List all the existing plans in the database
         ListView<String> planListView = new ListView<>();
@@ -66,6 +67,8 @@ public class SceneController {
                 Plan p = planHandler.openPlan(planListView.getSelectionModel().selectedItemProperty().getValue());
                 if (p != null) {
                     editPlan(p);
+                } else {
+                    errorLabel.setText("Please select a plan.");
                 }
             }
         });
@@ -78,7 +81,7 @@ public class SceneController {
                 if (planHandler.deletePlan(planListView.getSelectionModel().selectedItemProperty().getValue()) == true) {
                     initialScene();
                 } else {
-                    // <To-do: Display an error message here>
+                    errorLabel.setText("Error deleting a plan (either none was selected or an error occurred)");
                 }
             }
         });
@@ -93,6 +96,7 @@ public class SceneController {
         openingMenu.getChildren().addAll(planListView, openOrDelete);
 
         view.setCenter(openingMenu);
+        view.setTop(errorLabel);
 
         stage.setScene(scene);
     }
@@ -126,7 +130,7 @@ public class SceneController {
             if (p != null) {
                 editPlan(p);
             } else {
-                inputErrorLabel.setText("Plan could not be created. Either one of the fields is invalid or a plan with this name already exists.");
+                inputErrorLabel.setText("Plan could not be created. \nEither one of the fields is invalid or a plan with this name already exists.");
             }
         });
 
@@ -154,8 +158,11 @@ public class SceneController {
         viewChartsButton.setOnAction((event) -> {
             viewCharts(p);
         });
+        
+        Label errorLabel = new Label();
+        errorLabel.setPadding(new Insets(0, 20, 0, 20));
 
-        nav.getChildren().addAll(backToMainMenu, viewChartsButton);
+        nav.getChildren().addAll(backToMainMenu, viewChartsButton, errorLabel);
         view.setTop(nav);
 
         // Add labels for plan name, total budget, how much has been allocated & how much is remaining
@@ -175,6 +182,8 @@ public class SceneController {
             if (!planHandler.getAllCategories(p.getId()).isEmpty()) {
                 if (planHandler.deleteCategory(categoryListView.getSelectionModel().selectedItemProperty().getValue(), p)) {
                     editPlan(p);
+                } else {
+                    errorLabel.setText("Category could not be deleted (none selected)");
                 }
             }
         });
@@ -192,6 +201,8 @@ public class SceneController {
             if (planHandler.createCategory(categoryName.getText(), categoryAllocation.getText(), p)) {
                 categoryListView.setItems(planHandler.getAllCategories(p.getId()));
                 allocated.setText("Allocated: " + planHandler.getAllocated(p));
+            } else {
+                errorLabel.setText("Category could not be created." + "\n" + "Either the input was invalid or one with an identical name already exists.");
             }
         });
 
@@ -240,8 +251,12 @@ public class SceneController {
                         expenseListView.setItems(planHandler.getAllExpenses(planHandler.selectedCategory(selectedCategoryName, p).getId()));
                         used.setText("Used: " + planHandler.getUsed(p));
                         selectedCategoryUsed.setText("Used: " + planHandler.usedByCategory(planHandler.selectedCategory(selectedCategoryName, p)));
+                    } else {
+                        errorLabel.setText("Expense could not be deleted." + "\n" + "Either none was selected or a database error occurred");
                     }
                 }
+            } else {
+                errorLabel.setText("Please select a category.");
             }
         });
 
@@ -258,7 +273,11 @@ public class SceneController {
                     expenseListView.setItems(planHandler.getAllExpenses(planHandler.selectedCategory(selectedCategoryName, p).getId()));
                     used.setText("Used: " + planHandler.getUsed(p));
                     selectedCategoryUsed.setText("Used: " + planHandler.usedByCategory(planHandler.selectedCategory(selectedCategoryName, p)));
+                } else {
+                    errorLabel.setText("Expense could not be created." + "\n" + "Either the input was invalid or one with an identical name already exists.");
                 }
+            } else {
+                errorLabel.setText("Please select a category.");
             }
         });
 
@@ -329,7 +348,7 @@ public class SceneController {
         categoryNames.stream().forEach(cName -> {
             pieChartAllocationData.add(new PieChart.Data(cName, planHandler.selectedCategory(cName, p).getAllocated()));
         });
-        
+
         // Add unallocated funds / budget overflow to the piechart
         double unAllocated = p.getBudget() - planHandler.getAllocated(p);
         if (unAllocated > 0) {
@@ -357,7 +376,7 @@ public class SceneController {
         categoryNames.stream().forEach(cName -> {
             pieChartUsageData.add(new PieChart.Data(cName, planHandler.getUsedByCategory(planHandler.selectedCategory(cName, p))));
         });
-        
+
         // Add unused funds / budget overflow to the piechart
         double unUsed = p.getBudget() - planHandler.getUsed(p);
         if (unUsed > 0) {
