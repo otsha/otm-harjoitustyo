@@ -22,3 +22,9 @@ Sovelluksella käyttäjä voi luoda ja tallentaa budjettisuunnitelmia, tarkastel
     - Miten budjetin varojen käyttö jakautuu eri osa-alueittain
     
 *Tarkempaa tietoa sovelluksen eri toiminnallisuuksien käyttämisestä [käyttöohjeessa](https://github.com/otsha/otm-harjoitustyo/blob/master/documentation/userguide.md).*
+
+## Sovelluksen heikkouksia
+- Käyttöliittymäkoodi on yksinomaan yhdessä luokassa. Sen toiminnallisuutta on toki eritelty erillisiin metodeihin, mutta esimerkiksi näkymien täyttämisen olisi ehkä voinut ulkoistaa täysin jollekin toiselle luokalle.
+- Sovelluksen käyttöliittymä on rujo eikä esteettisesti kovin silmää miellyttävä. Elementeille olisi voinut jättää enemmän tilaa hengittää.
+- Sovelluslogiikka on suppea, ja lähinnä validoi syötteitä, siirtelee sovelluksen käsittelemää tietoa listasta toiseen tai suorittaa yksinkertaisia yhteenlaskuja.
+  - Sovelluslogiikkaa, kuten käyttöliittymää, olisi voinut jakaa useampaan luokkaan. Erillinen validoija ja suunnitelmien, kategorioiden ja kulujen käsittelijät erikseen?
