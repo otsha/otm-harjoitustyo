@@ -9,6 +9,7 @@
   - [CREATE TABLE -lauseet](#create-table--lauseet)
 - [Toiminnallisuudet](#toiminnallisuudet)
   - [Uuden suunnitelman luominen](#uuden-suunnitelman-luominen)
+  - [Suunnitelman poistaminen](#suunnitelman-poistaminen)
 
 ## Rakenne
 **Sovelluksen arkkitehtuuri on nelitasoinen.** 
@@ -23,7 +24,7 @@
 ![Sovelluksen arkkitehtuuri](https://github.com/otsha/otm-harjoitustyo/blob/master/documentation/week5_architecture.png)
 
 ## Logiikka
-Sovelluksen logiikkaa käsittelee ``logic`` -pakkauksen luokka ``PlanHandler``, joka käsittelee käyttöliittymän pyyntöjä. PlanHandlerilla on käytössään yksi instanssi jokaista Dao-luokkaa, joita se käyttää apunaan välittäessään tietoa käyttöliittymän ja tietokannan välillä.
+Sovelluksen logiikasta vastaa ``logic`` -pakkauksen luokka ``PlanHandler``, joka käsittelee käyttöliittymän pyyntöjä. PlanHandlerilla on käytössään yksi instanssi jokaista Dao-luokkaa, joita se käyttää apunaan välittäessään tietoa käyttöliittymän ja tietokannan välillä.
 
 Muutamia PlanHandlerin käyttöliittymälle tarjoamia metodeita:
 - ``getAllPlans()`` palauttaa kaikkien tietokannan budjettisuunnitelmien nimet *ObservableList*-oliona, jota käytetään käyttöliittymän *ListView* -näkymien täyttämiseen. Vastaavat metodit kategorioille ja kuluille ovat ``getAllCategories()`` ja ``getAllExpenses()``.
@@ -84,4 +85,17 @@ Kuvataan muutamaa sovelluksen päätoiminnallisuutta sekvenssikaavioita apuna k�
 ### Uuden suunnitelman luominen
 ![Sekvenssikaavio: uusi suunnitelma](https://github.com/otsha/otm-harjoitustyo/blob/master/documentation/seqDiagram_creating_a_plan_v2.png)
 
-Kun käyttäjä klikkaa aloitusnäkymässä "Create", eli haluaa luoda uuden budjettisuunnitelman, vaihtaa ``SceneController`` näkymäksi (scene) lomakkeen, jolla uusi suunnitelma luodaan. Lomakkeessa on kaksi kenttää; ensimmäiseen syötetään budjettisuunnitelman haluttu nimi ja toiseen varsinainen budjetti. "Create" -painiketta klikkaamalla lomakkeen tiedot lähetetään ``PlanHandler`` -luokalle, joka tarkistaa, ettei kumpikaan kentistä ole tyhjä ja että jälkimmäisen kentän sisältö voidaan muuttaa desimaaliluvuksi (``Double``). Jos tämä onnistuu, pyytää PlanHandler luokkaa ``PlanDao`` luomaan tietokantaan uuden suunnitelman käyttäjän antamilla parametreilla. Jos tietokantaan tallentaminen onnistuu (eli tietokantaan saadaan yhteys eikä siellä ole jo samannimistä suunnitelmaa), palauttaa PlanDao ``true`` ja PlanHandler pyytää sitä vielä hakemaan juuri luodun suunnitelman tietokannasta. Lopuksi PlanHandler palauttaa juuri luodun suunnitelman käyttöliittymälle, joka vaihtaa näkymäksi suunnitelman muokkausnäkymän.
+Kun käyttäjä klikkaa aloitusnäkymässä "Create", eli haluaa luoda uuden budjettisuunnitelman, vaihtaa ``SceneController`` näkymäksi (scene) lomakkeen, jolla uusi suunnitelma luodaan. Lomakkeessa on kaksi kenttää; ensimmäiseen syötetään budjettisuunnitelman haluttu nimi ja toiseen varsinainen budjetti. 
+
+"Create" -painiketta klikkaamalla lomakkeen tiedot lähetetään ``PlanHandler`` -luokalle, joka tarkistaa, ettei kumpikaan kentistä ole tyhjä ja että jälkimmäisen kentän sisältö voidaan muuttaa desimaaliluvuksi (``Double``). Jos tämä onnistuu, pyytää PlanHandler luokkaa ``PlanDao`` luomaan tietokantaan uuden suunnitelman käyttäjän antamilla parametreilla. Jos tietokantaan tallentaminen onnistuu (eli tietokantaan saadaan yhteys eikä siellä ole jo samannimistä suunnitelmaa), palauttaa PlanDao ``true`` ja PlanHandler pyytää sitä vielä hakemaan juuri luodun suunnitelman tietokannasta. 
+
+Lopuksi PlanHandler palauttaa juuri luodun suunnitelman käyttöliittymälle, joka vaihtaa näkymäksi suunnitelman muokkausnäkymän.
+
+### Suunnitelman poistaminen
+![Sekvenssikaavio: suunnitelman poisto](https://github.com/otsha/otm-harjoitustyo/blob/master/documentation/seqDiagram_deleting_a_plan.png)
+
+Kun käyttäjä on valinnut sovelluksen aloitusnäkymästä haluamansa poistettavan suunnitelman nimen ja klikkaa "Delete", pyytää ``SceneController`` ensinnäkin ``PlanHandler`` -luokalta listan kaikkien suunnitelmien nimistä (``PlanHandler`` pyytää listan suunnitelmista ``PlanDao`` -luokalta, joka puolestaan hakee suunnitelmat tietokannasta) tarkistaakseen, onko käyttäjän tekemä pyyntö validi - eli onko tietokannassa suunnitelmia poistettavaksi alun perinkään.
+
+Jos tietokannassa tosiaan on jotakin, mitä voidaan yrittää poistaa, kutsuu ``SceneController`` seuraavaksi ``PlanHandler`` -luokan metodia ``deletePlan(String name)``, jossa parametrina ``name`` on käyttäjän valitseman suunnitelman nimi. ``PlanHandler`` pyytää ``PlanDao`` -luokkaa etsimään vastaavannimisen suunnitelman tietokannasta. Jos ``PlanDao`` ei jostain syystä löydäkään suunnitelmaa, palauttaa se ``null``. Jos suunnitelma kuitenkin on olemassa, pyytää ``PlanHandler`` ``ExpenseDao`` ja ``CategoryDao`` -luokkia poistamaan kaikki suunnitelmaan liittyvät kulut ja kategoriat tietokannasta, ja lopuksi ``PlanDao`` -luokkaa poistamaan itse suunnitelman. Jos kaikki poistot onnistuvat virheittä, palauttaa ``PlanHandler`` käyttöliittymälle ``true``.
+
+Onnistuneen poiston jälkeen ``SceneController`` vielä päivittää näkymän resetoimalla sen (kutsumalla metodia ``ìnitialScene()`` uudestaan).
