@@ -13,5 +13,6 @@
 | 26.4 | ~0,25     | Dokumentaation päivitys: Lisäohjeita käyttöoppaaseen ja suunnitelman luomista kuvaavan sekvenssikaavion tarkennus
 | 30.4 | ~3        | Pientä refaktorointia, jUnit-testien kirjoittaminen PlanHandler-luokalle, JavaDocit kaikille kolmelle Dao-luokalle, Database-luokalle sekä PlanHandler-luokalle
 | 1.5  | ~2,5      | Uusi ominaisuus: Budjettisuunnitelmiin liittyvän tiedon visualisointi, dokumentaation päivitys (arkkitehtuuri, käyttöohje), toinen release
+| 10.5 | ~3        | Dokumentaation viilausta loppupalautusta varten (testausdokumentti, käyttöohjeen päivitys, toisen toiminnallisuuden kuvaus arkkitehtuuridokumenttiin), viimeisiä testejä PlanHandler-luokalle (haarautumat), useampien virheviestien näyttäminen käyttäjälle sovelluksessa, loppupalautuksen release
 
-Yhteensä: ~30,25h
+Yhteensä: ~33,25h
